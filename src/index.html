@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <title>Hello World!</title>
-    <link rel="stylesheet" href="index.css" />
-  </head>
-  <body>
-    <h1>💖 Hello World!</h1>
-    <p>Welcome to your Electron application.</p>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <title>G2B 업체정보 가져오기</title>
+  <link rel="stylesheet" href="index.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body>
+  <button type=button id="login-btn" class="rounded-md bg-sky-400 text-white px-5 hover:bg-sky-500">
+    로그인
+  </button>
+  <button type=button id="refresh-btn" class="rounded-md bg-sky-400 text-white px-5 hover:bg-sky-500" onclick="location.reload();">
+    새로고침
+  </button>
+  <input type="text" />
+  <script src="renderer.js"></script>
+</body>
+
 </html>
