@@ -1,0 +1,2881 @@
+################# https://www.g2b.go.kr:8079/ls/perf/selectStateMngStatC.do #################<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<title>
+
+경영상태(실적, 여유율포함)
+</title>
+
+
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/body.css">
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/width.css">
+<!--[if IE]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie.css" />
+<![endif]-->
+<!--[if IE 8]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie8.css" />
+<![endif]-->
+<!--[if IE 7]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie7.css" />
+<![endif]-->
+<!--[if IE 6]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie6.css" />
+<script src="/gov/koneps/co/js/png_ie6.js" type="text/livescript"></script>
+<script language="javascript" type="text/javascript">
+//<![CDATA[
+DD_belatedPNG.fix('.png, .win, .btn_mdl, .btn_view, span, strong, img, li');  // png 이미지 적용
+//]]>
+</script>
+<![endif]-->
+
+<script type="text/javascript" src="/gov/koneps/co/js/crossDomain.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/popup.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/wz_tooltip.js"></script> </head><body><div id="WzTtDiV" style="visibility: hidden; position: absolute; overflow: hidden; padding: 0px; width: 0px; left: 0px; top: 0px;"></div>  
+<script type="text/javascript" src="/gov/koneps/co/js/validator.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/util.js"></script>
+<script type="text/javascript" src="/gov/koneps/ls/js/lsUtil.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/ajax.js"></script>    
+<script type="text/javascript" src="/gov/koneps/co/js/commonPopup.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/datepicker.js"></script>
+<script type="text/javascript" src="/gov/koneps/ls/js/perfMngStatDtl.js"></script>
+<script type="text/javaScript" language="javascript">
+//<![CDATA[ 
+    function fnSearch(){
+        if($("#taskCl").val() == "G" && "" == "P"){
+            if(!util_checkDateFromToMust(document.frm.bidStartYmd,document.frm.bidEndYmd,"입찰참가일자")){
+                return;
+            }
+            if( !lsUtil_periodCheck(document.frm.bidStartYmd.value,document.frm.bidEndYmd.value)){
+                return;
+            }
+        }
+        
+        if($("#bizRegNo").val() == ""){
+            alert("사업자등록번호를 입력하여 주세요.");
+            $("#bizRegNo").focus();
+            return;
+            
+        }
+        if($("input:checked").val() == undefined){
+            alert("기준을 선택하여 주세요.");
+            return;
+        }
+        if($("#taskCl").val() == "G"){
+            $("#frm").attr("target","_self").attr("action","/ls/perf/selectStateMngStatM.do").submit();//수요기관
+        }else{
+            $("#frm").attr("target","_self").attr("action","/ls/perf/selectStateMngStatC.do").submit();//조달업체
+        }
+    }
+
+    function fnPrint(){
+        window.open("", "printView", "toolbar=yes, location=no, status=yes, scrollbars=yes, resizable=yes, width=850px, height=700px");
+        $("#frm").attr("target","printView").attr("action","/ls/perf/selectGovtStateMngStatPop.do").submit();
+    }
+    
+    //xml내려받기
+    function fnXmlDownLoad(){
+        $("#assoNm").val($("#assoCd option:selected").text());
+        $("#frm").attr("target","xml").attr("action","/ls/perf/mngStatXmlDown.do").submit();
+    }
+    
+    //업체검색
+    function fnSrchSupplier(){
+        var width = 650;
+        var height = 600;
+        var url = "/ls/general/selectSupplierList.do";
+        popup_openWindowScroll(url, width, height, "searchSupplier");
+
+    }
+    
+    function callback_supplier(aParam){//업체검색 callback
+        $("#bizRegNo").val(aParam["bizRegNo"]);
+        $("#supplierNm").val(aParam["supplierNm"]);
+    }
+    
+    function fnYearSearch(gubun){//조회
+        var width = 900;
+        var height = 700;
+        var url = "/ls/state/selectCriteriaYearList.do?taskCl=C&gubun="+gubun+"&assoCd="+''+"";
+        popup_openWindowScroll(url, width, height, "criteriaYear");
+    }
+    
+    function fnCreditEvalGrade(){//조회
+        var width = 900;
+        var height = 700;
+        var url = "/ls/credit/listPageCreditEvalGradeInst.do";
+        popup_openWindowScroll(url, width, height);
+    }
+    
+    function tooltipMsg(){
+        var cont = "";
+        cont +=  "<table>";
+        cont +=       "<tr>";
+        cont +=           "<th  class='tc' style='width: 130px; border:1px solid lightgrey;'>협회 명</th>";
+        cont +=           "<th  class='tc' style='border:1px solid lightgrey;'>업종 명</th>";
+        cont +=       "</tr>";
+        
+            cont +=       "<tr>";
+            cont +=           "<td class='tc' style='width: 130px; border:1px solid lightgrey;'>" + "대한건설협회" + "</td>";
+            cont +=           "<td style='border:1px solid lightgrey;'>" + "(0001)토목공사업,(0002)건축공사업,(0003)토목건축공사업,(0005)조경공사업,(1449)산업.환경설비공사업" + "</td>";
+            cont +=       "</tr>";
+        
+            cont +=       "<tr>";
+            cont +=           "<td class='tc' style='width: 130px; border:1px solid lightgrey;'>" + "한국전기공사협회" + "</td>";
+            cont +=           "<td style='border:1px solid lightgrey;'>" + "(0037)전기공사업" + "</td>";
+            cont +=       "</tr>";
+        
+            cont +=       "<tr>";
+            cont +=           "<td class='tc' style='width: 130px; border:1px solid lightgrey;'>" + "한국정보통신협회" + "</td>";
+            cont +=           "<td style='border:1px solid lightgrey;'>" + "(0036)정보통신공사업" + "</td>";
+            cont +=       "</tr>";
+        
+            cont +=       "<tr>";
+            cont +=           "<td class='tc' style='width: 130px; border:1px solid lightgrey;'>" + "대한설비건설협회" + "</td>";
+            cont +=           "<td style='border:1px solid lightgrey;'>" + "(6202)기계가스설비공사업" + "</td>";
+            cont +=       "</tr>";
+        
+            cont +=       "<tr>";
+            cont +=           "<td class='tc' style='width: 130px; border:1px solid lightgrey;'>" + "대한전문건설협회" + "</td>";
+            cont +=           "<td style='border:1px solid lightgrey;'>" + "(4989)지반조성ㆍ포장공사업,(4990)실내건축공사업,(4991)금속창호ㆍ지붕건축물조립공사업,(4992)도장ㆍ습식ㆍ방수ㆍ석공사업,(4993)조경식재ㆍ시설물공사업,(4994)철근ㆍ콘크리트공사업,(4995)구조물해체ㆍ비계공사업,(4996)상ㆍ하수도설비공사업,(4997)철도ㆍ궤도공사업,(4998)철강구조물공사업,(4999)수중ㆍ준설공사업,(6201)승강기,삭도공사업" + "</td>";
+            cont +=       "</tr>";
+        
+            cont +=       "<tr>";
+            cont +=           "<td class='tc' style='width: 130px; border:1px solid lightgrey;'>" + "한국소방시설협회" + "</td>";
+            cont +=           "<td style='border:1px solid lightgrey;'>" + "(0038)일반소방시설공사업(기계),(0039)일반소방시설공사업(전기),(0040)전문소방시설공사업" + "</td>";
+            cont +=       "</tr>";
+        
+            cont +=       "<tr>";
+            cont +=           "<td class='tc' style='width: 130px; border:1px solid lightgrey;'>" + "대한시설물유지관리협회" + "</td>";
+            cont +=           "<td style='border:1px solid lightgrey;'>" + "(0035)시설물유지관리업" + "</td>";
+            cont +=       "</tr>";
+        
+            cont +=       "<tr>";
+            cont +=           "<td class='tc' style='width: 130px; border:1px solid lightgrey;'>" + "문화재수리협회" + "</td>";
+            cont +=           "<td style='border:1px solid lightgrey;'>" + "(0042)종합문화재수리업(보수단청업),(0043)전문문화재수리업(조경업),(1127)전문문화재수리업(보존과학업),(1128)전문문화재수리업(식물보호업),(6475)전문문화재수리업(단청공사업),(6476)전문문화재수리업(목공사업),(6477)전문문화재수리업(석공사업),(6478)전문문화재수리업(번와공사업)" + "</td>";
+            cont +=       "</tr>";
+        
+        cont +=  "</table>";
+        lsUtil_tooltipHelpMsg(cont);
+    }
+    
+    function js_tooltipHelpMsg(arg_msgType){
+        var message = "";
+        var titleMsg= "";
+        
+        if(arg_msgType=='영업기간산정일'){
+            titleMsg = "<span class='blue'><b>영업기간산정일</b><span>";
+            message = '주력분야인 경우 지정일자를 표시';
+        }
+
+        Tip(message, WIDTH, 550, SHADOW, true, STICKY, 1, CLOSEBTN, true, CLICKCLOSE, false, TITLE, titleMsg);
+    }
+//]]>
+</script>
+
+
+<div id="content_wrap">
+    <div id="content_header">
+        
+            <h2>경영상태(실적, 여유율포함)</h2>
+            <div id="help"><button type="button" id="btn_help" title="새창열림" onclick="javascript:util_viewOnlineManual('/WEB-INF/jsp/ls/perf/perfMngStatDtl.jsp','','/WEB-INF/jsp/ls/perf/perfMngStatDtl.jsp','/ls/perf/selectStateMngStatC.do','null');"><span>온라인매뉴얼</span></button></div>
+        
+        
+    </div>
+    <div id="container">
+        
+            <div class="description">
+                <ol>
+                    <li>※본 정보는 수요기관 사용자가 나라장터에서 직접 조회 가능하므로 <span class="red">출력 기능은 제공하지 않습니다.</span></li>
+                    <li><span class="red">건설업역 규제 폐지 시행(‘21.1.1.)에 따른 상호시장 진출 시 본 자료를 활용하여 심사할 수 없습니다.</span> (경영상태, 신용평가등급 정보는 활용 가능)
+                        <br>관련 기준 확인 후 적격심사자에게 심사에 필요한 <b>자료를 직접 제출하여야 합니다.</b></li>
+                </ol>
+            </div>
+        
+        
+        <!-- Content Include -->
+        <form id="frm" name="frm" method="post" action="">
+            <input type="hidden" id="taskCl" name="taskCl" value="C"><!-- 조달업체, 수요기관 구분 -->
+            <input type="hidden" id="auditAssoCd" name="auditAssoCd" value="">
+            <input type="hidden" id="assoNm" name="assoNm">
+            <input type="hidden" id="preBizRegNo" name="preBizRegNo" value="4508100316">
+            <input type="hidden" id="preAssoCd" name="preAssoCd" value="">
+            <div class="section">
+                <table summary="경영상태 검색 입력 폼 ">
+                    <caption><span>경영상태 검색</span></caption>
+                    <colgroup>
+                        <col class="w18p">
+                        <col class="w32p">
+                        <col class="w18p">
+                        <col class="w32p">
+                    </colgroup>
+                    <!-- 조달업체 -->
+                    <tbody><tr>
+                        <th scope="col"><label for="assoCd">자료제공협회</label><button type="button" class="btn_help" title="도움말" onclick="javascript:tooltipMsg()"></button></th>
+                        <td scope="col">
+                            
+                                
+                                
+                                    협회에서 받은 자료가 존재하지 않습니다.
+                                
+                            
+                        </td>
+                        <th><label for="standard">기준</label></th>
+                        <td>
+                            <div class="fl"> 
+                                <input type="radio" id="standard1" name="standard" value="1" title="국가계약법">국가계약법
+                                <input type="radio" id="standard2" name="standard" value="2" title="지방계약법">지방계약법
+                            </div>
+                            <div class="fr">
+                                <a href="#click" onclick="fnSearch();" class="btn_search" id="bt_search"><span>검 색</span></a>
+                            </div>
+                        </td>
+                    </tr> 
+                    
+                    
+                   
+                </tbody></table>
+            </div>
+            
+              
+            
+            
+        </form>
+    </div>
+</div>
+<iframe name="xml" width="0" height="0" frameborder="0" title="xml"></iframe>
+
+ 
+
+
+</body>################# https://www.g2b.go.kr:8070/um/supplier/general/supplierSelfInfoMng.do #################<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+
+
+	
+
+<title>자기정보확인관리/등록증출력 : 나라장터</title>
+
+
+
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/body.css">
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/width.css">
+<!--[if IE]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie.css" />
+<![endif]-->
+<!--[if IE 8]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie8.css" />
+<![endif]-->
+<!--[if IE 7]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie7.css" />
+<![endif]-->
+<!--[if IE 6]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie6.css" />
+<script src="/gov/koneps/co/js/png_ie6.js" type="text/livescript"></script>
+<script language="javascript" type="text/javascript">
+//<![CDATA[
+DD_belatedPNG.fix('.png, .win, .btn_mdl, .btn_view, span, strong, img, li');  // png 이미지 적용
+//]]>
+</script>
+<![endif]-->
+
+
+
+
+
+
+	
+
+
+<script type="text/javascript" src="/gov/koneps/co/js/crossDomain.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/popup.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/validator.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/util.js"></script>
+<script type="text/javascript" src="/gov/koneps/um/js/um.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/wz_tooltip.js"></script> <link rel="stylesheet" type="text/css" href="/gov/koneps/um/css/umCommon.css"></head><body><div id="WzTtDiV" style="visibility: hidden; position: absolute; overflow: hidden; padding: 0px; width: 0px; left: 0px; top: 0px;"></div>  
+<script type="text/javascript" src="/gov/koneps/co/js/datepicker.js"></script>
+<script type="text/javascript" src="/gov/koneps/um/helpmsg/supplier/general/supplierSelfInfoMng.js?1682038872230"></script>
+<script type="text/javascript" src="/gov/koneps/um/js/umqrcode.js"></script>
+<script type="text/javascript" src="/gov/koneps/um/js/umReport.js?1682038872230"></script>
+<script type="text/javascript" src="/gov/koneps/um/js/umEtcLink.js?1682038872230"></script>
+<script type="text/javascript" src="/gov/koneps/um/js/supplier.js?1682038872230"></script>
+<script type="text/javascript" src="/gov/koneps/um/js/umPopup.js?1682038872230"></script>
+<script type="text/javascript" src="/gov/koneps/um/js/umDialog.js?1682038872230"></script>
+<script type="text/javascript" src="/gov/koneps/um/js/umExtrlCntcUrl.js?1682038872230"></script>
+
+<script type="text/javascript">
+//<![CDATA[           
+
+function qrCodeMakeEdoc(bizRegNo){
+    var action ="https://www.g2b.go.kr:8073/cm/edoccert/makeQrcode.do?docCnfirmkeyValue="+bizRegNo+"&qrcdApplcTrgetNo=2";
+    
+    if(umqrcode_qrcodeMakeYn=='Y'){
+        if ($("iframe[name=qrcodeFrame]").length < 1) {
+            $("body").append('<iframe name="qrcodeFrame" src="'+action+'" width="10" height="10" style="display:none"></iframe>');
+        }
+    }
+}
+           
+function printDoc(){
+
+    // "등록취소" 업체의 입찰참가자격등록증 출력 제한 긴급처리
+    var obj = document.frm;
+    var statCd = document.getElementsByName("statCd");
+
+    for( i=0; i<statCd.length;i++){
+        if(statCd[i].value == '07'){
+            alert("등록취소된 업체는 등록증을 출력하실 수 없습니다.");
+            return;
+        }
+    }
+
+    //지사인 경우 입찰참가자격등록증 출력 제한
+    var hoCl = 'Y';
+    if(hoCl=='N'){
+        alert("법인업체의 지사인 경우는 경쟁입찰참가자격 등록증을 출력하실수 없습니다 \n\n 본사로 로그인후 경쟁입찰참가자격등록증을 출력하시기 바랍니다.");
+        return;
+    }
+
+    if(obj.bidJoinerQualYn.value=='N'){
+        alert("입찰참가자격이 없는 업체는 등록증을 출력하실 수 없습니다.");
+        return;
+    }
+
+    
+    if(confirm('출력하시겠습니까?')){
+        //20140918 QR코드이미지생성
+        qrCodeMakeEdoc("4508100316");
+        popup_openWindowScroll('' , '850', '500', 'id_confirm');
+
+        document.frm_prt.url.value = 'https://www.g2b.go.kr:8070/um/report/printBidJoinerQualRegDocRpt.do?bizRegNo=4508100316';
+        document.frm_prt.action='/um/co/rexViwer.do';
+        document.frm_prt.target='id_confirm';
+        document.frm_prt.submit();
+    }    
+}
+function korcham(url)
+{
+    var formObj = document.frm_korcham;
+
+    formObj.action = "/um/supplier/general/insertKorchambizLog.do?callScreenClCd=2";
+    formObj.method = "post";
+    formObj.target = "_self";
+    formObj.submit();
+
+    popup_openWindowScrollPos(url, '614', '590', 'korcham','1', '1');
+}
+
+// 조달업체 중복조회
+function toSupplierDupList(bizRegNo, corpRegNo){
+    popup_openWindowScrollPos("/um/supplier/general/pvtSupplierDupDtl.do?bizRegNo="+bizRegNo+"&corpRegNo="+corpRegNo+"&searchCl=", "850","500","supplierDup","1", "1");
+}
+
+// 대표자, 입찰대리인 중복조회
+function toChfBidAttorneyDupList(bizRegNo){
+    popup_openWindowScrollPos("/um/supplier/general/listChfBidAttorneyDup.do?bizRegNo="+bizRegNo+"&searchCl=", "500","300","chfBidAttorneyDup","1", "1");
+}
+
+function toInjusticeChf(pvtNo, chfIdno) {
+    var addParam = "&bizRegNo=4508100316&bidno=&bidseq=&bidcate=&rebidno=";
+    var url = "/um/injustice/supplierInjusticeStatusDtl.do?cl=ceo&pvtNo=" + pvtNo+ "" + addParam;
+    popup_openWindowScrollPos(url, '900', '600' ,'login_win', '1', '1');
+}   
+
+
+// 신인도 조회 버튼 (조달업체)
+function toSupCredit(){
+    var url = "https://www.g2b.go.kr:8079/ls/perf/selectCreditDtlC.do";
+    popup_openWindowScrollPos(url, '900', '600' ,'injustice_win', '1', '1');
+}
+
+//신인도 조회 버튼 (수요기관)
+function toInstCredit(bizRegNo){
+    if(""=="72"){
+        alert("기관의 소관구분이 기타기관인 경우에는 조회할 수 없습니다.");
+        return;
+    }
+    
+    var url = "https://www.g2b.go.kr:8079/ls/perf/selectCreditDtlP.do?searchBizRegNo="+bizRegNo;
+    popup_openWindowScrollPos(url, '900', '600' ,'injustice_win', '1', '1');        
+
+}
+
+//자기정보수정 PC
+function toSelfInfoUpdate(){
+    //param 사업자번호, 법인번호, 지사여부, 화면코드
+    var bizRegNo='4508100316';
+    var corpNo='1601110416415';
+    var hoYn='';
+    var cd="toSelfInfoUpdate";
+    var mobildYn = 'pc';
+    
+    if(rcvSupplierProgressStatExistsYn(bizRegNo, corpNo, hoYn, cd, mobildYn)){
+        location.href = "/um/supplier/general/selectSupplierSelfInfoUpdt.do";
+    }
+}
+
+//자기정보수정 모바일
+function toSelfInfoUpdateMO(){
+    //param 사업자번호, 법인번호, 지사여부, 화면코드
+    var bizRegNo='4508100316';
+    var corpNo='1601110416415';
+    var hoYn='';
+    var cd="toSelfInfoUpdateMO";
+    var mobildYn = 'pc';
+    
+    if(rcvSupplierProgressStatExistsYn(bizRegNo, corpNo, hoYn, cd, mobildYn)){
+        location.href = "/um/supplier/general/selectSupplierSelfInfoUpdt.do";
+    }
+}
+
+// 정보확인
+function toConfirm(){
+    
+    var message= "귀사 정보가 현재 상태와 일치합니까?"
+                +"\r\n확인 클릭시 본인정보 확인일이 현재날짜로 갱신됩니다.";
+    
+    if(confirm(message)){
+        
+        window.open("",'regWin','status=yes,resizable=yes,scrollbars=no,toolbar=no,width=400,height=300');
+        document.frm.target="regWin";
+        document.frm.method='post';
+        document.frm.action="/um/supplier/general/infoConfirm.do";
+        document.frm.submit(); 
+        
+        return; 
+    }   
+    else{
+    	var hoYn = 'Y';
+    	var message2 = "귀사의 정보가 올바르지 않으면 하단의 수정(자기정보확인)버튼 클릭하여 정보를 수정하시거나  나의 나라장터 > 업체정보관리 > 입찰참가자격변경신청을 하여 정보 수정 후 송신하여 승인받으시기 바랍니다.";
+    	if(hoYn == 'N'){
+    		message2 = "귀사의 정보가 올바르지 않으면 하단의 수정(자기정보확인)버튼 클릭하여 정보를 수정하시거나  나의 나라장터 > 업체정보관리 > 입찰참가자격변경신청을 하여 정보 수정 후 송신하여 승인받으시기 바랍니다.\n단, 법인업체의 경우 자기정보 수정은 본사에서만 가능하며, 본사에서 정보 수정 시 지사의 정보도 동일하게 반영됩니다.";
+    	}
+        alert(message2);
+    }
+}
+
+
+function toPrintRex4() {
+    
+    // "등록취소" 업체의 입찰참가자격등록증 출력 제한 긴급처리
+    var obj = document.frm;
+    var statCd = document.getElementsByName("statCd");
+
+    for( i=0; i<statCd.length;i++){
+        if(statCd[i].value == '07'){
+            alert("등록취소된 업체는 등록증을 출력하실 수 없습니다.");
+            return;
+        }
+    }
+
+    //지사인 경우 입찰참가자격등록증 출력 제한
+    var hoCl = 'Y';
+    if(hoCl=='N'){
+        alert("법인업체의 지사인 경우는 경쟁입찰참가자격 등록증을 출력하실수 없습니다 \n\n 본사로 로그인후 경쟁입찰참가자격등록증을 출력하시기 바랍니다.");
+        return;
+    }
+
+    if(obj.bidJoinerQualYn.value=='N'){
+        alert("입찰참가자격이 없는 업체는 등록증을 출력하실 수 없습니다.");
+        return;
+    }
+    
+    var prptNames = "bidJoinerQualRegDoc"; // 보고서명 
+    var prptParams = "";
+    prptParams = "bizRegNo::" + "4508100316";
+    js_printRex4("XMLMEMO", prptNames, prptParams);
+            
+}
+
+function toPrintRex(){
+    if(js_clipReport4YN() == 'Y' &&  bidJoinerRepor4tYn == 'Y'){
+        toPrintRex4();
+    }else{
+        printDoc();
+    }
+}
+
+//면허 협회갱신일자 조회
+function viewLicenseAssoModDt() {
+
+    url="/um/supplier/general/supplierIndustralInfo.do?bizRegNo=4508100316";
+
+    openWinLicenseAssoModDt = popup_openWindowScroll(url, 850, 500, 'openWinLicenseAssoModDt', 1, 1);
+}
+
+//주력분야 갱신이력 조회  histCond - kiscon : 키스콘, kosca : 협회
+function supplier_viewMainIndustryHist(histCond) {
+    
+    url="/um/supplier/general/supplierMainIndustralHist.do?bizRegNo=4508100316&histCond=" + histCond;
+
+    openWinMainIndustryHist = popup_openWindowScroll(url, 850, 700, 'viewMainIndustryHist', 1, 1);
+}
+
+
+//]]>
+</script>
+
+
+
+
+<form name="detailview" method="post" action="">
+    <input type="hidden" id="bizRegNo" name="bizRegNo" value="" title="사업자등록번호">
+    <input type="hidden" id="chfIdno" name="chfIdno" value="" title="대표자주민번호">
+    <input type="hidden" id="cl" name="cl" value="" title="구분">
+</form>
+
+
+<div id="content_wrap">
+    <div id="content_header"><h2>자기정보확인관리/등록증출력</h2>
+    <div id="help"><button type="button" id="btn_help" title="새창열림" onclick="javascript:util_viewOnlineManual('/WEB-INF/jsp/um/supplier/general/supplierSelfInfoMng.jsp','RUKE_supplierSelfInfoMng','/WEB-INF/jsp/um/supplier/general/supplierSelfInfoMng.jsp','/um/supplier/general/supplierSelfInfoMng.do','null');"><span>온라인매뉴얼</span></button></div>
+    </div>
+    
+
+
+ 
+    <div id="container">
+        <!-- Content Include -->
+
+        <form id="frm_prt" name="frm_prt" method="post" action="">
+        <input type="hidden" id="fileName" name="fileName" value="bidJoinerQualRegDoc" title="fileName">
+        <input type="hidden" id="url" name="url" title="주소">
+        </form>
+
+        <form id="frm" name="frm" method="post" action="">
+        <input type="hidden" id="bidJoinerQualYn" name="bidJoinerQualYn" value="" title="입찰참가자격여부">
+        
+    
+        <!-- 기관에서 해당페이지로 이동시 상단 안내문구 업체와 다르게 보이도록 처리 -->
+        
+            <div class="description">
+                <ol>
+                    <li>전화번호, 팩스번호, 종업원수, 홈페이지, 대표자 이메일주소 및 휴대전화 번호, 대표대표자 여부, 공급물품, 공장전화 및 팩스번호, 제조물품의 <br>대표물품여부, 공사.용역.기타업종의 대표업종여부, 입찰대리인 이메일 주소 및 휴대전화번호, 부서 팩스번호, 직책명, 사무실 전화번호는 <br>[자기정보확인관리/등록증출력]메뉴에서 수정이 가능하며 조달청의 승인을 받지 않아도 됩니다.
+                        
+                            <br><font color="red"><b>단, 법인업체의 경우 자기정보 수정은 본사에서만 가능하며, 본사에서 정보 수정 시 지사의 정보도 동일하게 반영됩니다.</b></font>
+                        
+                    </li>
+                    <li>영문상호명, 영문주소, 대표자 영문성명은 [조달업체 영문정보 변경신청] 메뉴에서 변경신청하고 조달청 승인을 받아야 합니다.<br>- 영문정보는 입찰참가자격과 무관한 정보이므로, 영문 납품실적증명서를 발급하지 않으실 경우 등록하실 필요 없습니다.</li>
+                    <li>위 정보를 제외한 업체정보는 [입찰참가자격변경신청] 메뉴에서 변경신청하고 조달청 승인을 받아야 합니다.</li>
+                    
+                        
+                            <li>해당 업체의 모든 입찰자격사항이력 조회: <a href="/um/supplier/general/supplierBidQualMattHistDtl.do?bizRegNo=4508100316" class="btn_mdl"><span>입찰자격사항이력 조회</span></a></li>
+                        
+                        
+                        
+                        
+                     
+                </ol>
+            </div>
+        
+        
+        
+
+        <div class="infoleft fl"><h3>[일반정보]</h3></div><a name="aLinkSupplierNm"></a>
+        
+            <div class="inforight">
+                <a href="javascript:toChfBidAttorneyDupList('4508100316');" class="btn_mdl">
+                    <span>대표자/입찰대리인중복조회</span>
+                </a>                
+            </div>
+        
+
+        <div class="detail">
+        <p class="hide">조달업체 일반정보</p>
+        <table class="table_info">
+            <caption><span>조달업체 일반정보</span></caption>
+            <colgroup>
+            <col class="w15p">
+            <col class="w35p">
+            <col class="w15p">
+            <col class="w35p">
+            </colgroup>
+            
+            <tbody><tr>
+                <th><p>사업자등록번호</p></th>
+                <td><div class="tb_inner">450-81-00316</div>
+                </td>
+                <th><p>개업일자</p></th>
+                <td><div class="tb_inner">2016/01/01</div></td>
+            </tr>
+            <tr>
+                <th><p>상호명<br>(영문상호명)</p></th>
+                <td colspan="3">
+                     <div class="tb_inner">
+                         비드코칭연구소 주식회사
+                         
+                             <br>
+                             (bidcst)
+                         
+                     </div>
+                </td>
+            </tr>
+            
+            <tr>
+                <th><p>지역코드</p></th>
+                <td><div class="tb_inner">대전광역시 중구 동서대로1304번길 (30140)</div></td>
+                <th><p>우편번호</p></th>
+                <td><div class="tb_inner">34903</div></td>
+            </tr>
+            <tr>
+                <th><p>주소<br>(영문주소)</p></th>
+                <td colspan="3">
+                     <div class="tb_inner">
+                         대전광역시 중구 동서대로1304번길 33-0 (오류동)
+                         
+                     </div>
+                </td>
+            </tr>
+            <tr>
+                <th><p>전화번호</p></th>
+                <td><div class="tb_inner">042-336-2011</div></td>
+                <th><p>팩스번호</p></th>
+                <td><div class="tb_inner"></div></td>
+            </tr>
+            <tr>
+                <th><p>국적</p></th>
+                <td><div class="tb_inner">대한민국</div></td>
+                <th><p>홈페이지</p></th>
+                <td><div class="tb_inner"></div></td>
+            </tr>
+            <tr>
+                <th><p>업체구분</p></th>
+                <td><div class="tb_inner">
+                    <input type="radio" title="제조구분코드" disabled="disabled">제조업체&nbsp;
+                    <input type="radio" title="제조구분코드" checked="checked" disabled="disabled">공급업체</div>
+                </td>
+                <th><p>종업원수</p></th>
+                <td><div class="tb_inner">30 명</div></td>
+            </tr>
+            <tr>
+                <th><p>업무구분</p></th>
+                <td colspan="3"><div class="tb_inner">
+                    
+                    <input type="checkbox" title="업무구분" checked="checked" disabled="disabled">물품&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox" title="업무구분" disabled="disabled">공사&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox" title="업무구분" disabled="disabled">용역&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox" title="업무구분" disabled="disabled">일반용역&nbsp;&nbsp;&nbsp;
+                    <input type="checkbox" title="업무구분" disabled="disabled">외자</div>
+                </td>
+            </tr>
+            <tr>
+                <th><p>조합여부</p></th>
+                <td colspan="3">
+                    <div class="tb_inner">
+                        <input type="checkbox" title="조합여부" id="unionYn" name="unionYn" value="" disabled="disabled"> 해당
+                    </div>
+                </td>
+            </tr>           
+            
+            
+                <tr>
+                    <th><p>본점소재지 등기일</p></th>
+                    <td colspan="3">
+                        <div class="tb_inner">
+                            
+                        </div>
+                    </td>
+                </tr>
+            
+            <!-- 지사업체 정보조회시 자본금 항목 보이지 않도록 처리 -->
+            
+                
+                
+                <tr>
+                    <th><p>법인등록번호</p></th>
+                    <td><div class="tb_inner">1601110416415</div></td>
+                    <th><p>법인설립일자</p></th>
+                    <td><div class="tb_inner">2016/01/12</div></td>
+                </tr>
+                <tr>
+                    <th><p>본사구분</p></th>
+                    <td colspan="3"><div class="tb_inner">
+                        
+                            
+                            본사
+                        </div>
+                    </td>
+                </tr>
+
+                
+            
+            
+            
+                <tr>
+                    <th><p>고유번호증<br>(법인세법 시행령)</p></th>
+                    <td colspan="3">
+                        <div class="tb_inner">
+                            
+                        </div>
+                    </td>
+                </tr>
+            
+            
+            <tr>
+                <th><p>등록일시</p></th>
+                <td><div class="tb_inner">2016/08/17 10:19</div></td>
+                <th><p>갱신일시</p></th>
+                <td><div class="tb_inner">2016/08/17 10:42</div></td>
+            </tr>               
+            <tr>
+                <th><p>협업여부</p></th>
+                <td>
+                    <div class="tb_inner">
+                        <input type="checkbox" title="협업여부" disabled="disabled">해당
+                    </div>
+                </td>
+                <th><p>문서24 이용<br> 동의여부</p></th>
+                <td>
+                    <div class="tb_inner">
+                    	<!-- SR230308141_[사용자][자체]업체 로그인 시 문서24간편가입 메뉴 강제 이동처리 프로세스 개선 요청 -->
+                    	
+                    		
+                    		미동의
+                    	
+                    </div>
+                </td>
+            </tr>
+
+        </tbody></table>
+        </div>
+
+        <div class="info_h3"><h3>[기업인증정보]</h3></div>
+        
+            <div class="description">
+                <ul>
+                    <li><b><span class="red">■ 나라장터에서 제공하는 조달업체 기업인증정보는 실시간 정보와 상이할 수 있으므로, 다음 내용의 정보가 게재된 경우</span></b></li>
+                    <li><b>&nbsp; &nbsp; <span class="red"> 해당 기관에 재확인 후 업무처리하시기 바랍니다.</span></b> </li>
+                    <li> 
+                        <b>&gt;기업규모(대기업, 중견기업, 중소기업, 비영리법인 등 기타) : 신용정보사의 수신받은 정보로 제공 
+                            <button type="button" class="btn_help" title="도움말" onclick="javascript:supplierSelfInfoMng_tooltipHelpMsg('기업규모')"></button> 
+                        </b>
+                    </li>
+                    <li></li>
+                    <li><b>&gt;중소기업 인증관련</b></li>
+                    <li><span class="mdx2">&nbsp;</span><b><span class="blue">☞ 정보제공시스템: 중소기업 제품 공공구매 종합정보망 (www.smpp.go.kr)</span></b></li>
+                    <li><span class="mdx2">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>- 수신인증정보 정정관련 문의 : 공공구매종합정보 콜센터(1533-0092)</li>
+                    <li></li>
+                    <li><span class="mdx2">&nbsp;</span><b><span class="blue">☞ 인증발급기관</span></b></li>
+                    <li>
+                        <span class="mdx2">&nbsp;</span> - 소상공인, 소기업, 중기업 [중소기업확인서] : 중소벤처기업부(중소기업기본법, 정책총괄과) 발급관련 문의
+                        <button type="button" class="btn_help" title="도움말" onclick="javascript:supplierSelfInfoMng_tooltipHelpMsg('중소벤처기업부 발급관련 문의')"></button> 
+                    </li>
+                    <li><span class="mdx2">&nbsp; &nbsp;</span> <span class="red">* 유예기간 미반영</span> (중소기업기본법 제2조③항 중소기업 범위를 벗어나는 경우 발생연도 다음 연도부터 3년간 중소기업으로 인정)</li>
+                    <li><span class="mdx2">&nbsp;</span> - 여성기업 [여성기업확인증] : 한국여성경제인협회 (www.wbiz.or.kr, 02-369-0900)</li>
+                    <li><span class="mdx2">&nbsp;</span> - 장애인기업 [장애인기업확인서] : (재)장애인기업종합지원센터 (www.debc.or.kr, 1588-6072)</li>
+                    <li><span class="mdx2">&nbsp;</span> - 기술혁신형기업 [기술혁신형중소기업확인서] : 중소기업기술혁신협회 (www.innobiz.net, 031-628-9600)</li>
+                    <li><span class="mdx2">&nbsp;</span> - 경영혁신형기업 [경영혁신형중소기업확인서] : (사)한국경영혁신중소기업협회 (www.mainbiz.go.kr, 02-2230-2143)</li>
+                    <li><span class="mdx2">&nbsp;</span> - 벤처기업 [벤처기업확인서] : 중소벤처기업진흥공단 (www.sbc.or.kr, 1357),</li>
+                    <li>
+                        <span class="mdx2">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span> 
+                        기술보증기금(www.kibo.or.kr, 1544-1120),
+                     </li>
+                    <li>
+                        <span class="mdx2">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span> 
+                        한국벤처캐피탈협회 (www.kvca.or.kr, 02-2156-2100)
+                    </li>
+                    <li><span class="mdx2">&nbsp;</span> - 수출유망중소기업 [수출유망중소기업지정증] : 중소기업수출지원센터 (www.exportcenter.go.kr, 지역별 지원센터)</li>
+                    <li><span class="mdx2">&nbsp;</span> - 우수그린비즈 [우수Green-Biz(녹색경영우수중소기업)확인서] : 한국표준협회 (www.greenbiz.kr)</li>
+
+					<li><span class="mdx2">&nbsp;</span> - 창업기업[창업기업확인서] : 중소벤처기업부(창업기업정책총괄과, 「중소기업창업 지원법」),</li>
+				    <li><span class="mdx2">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>창업진흥원(창업기업확인시스템 https://cert.k-startup.go.kr, 1811-3773 /</li>
+					<li><span class="mdx2">&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</span>창업지원포털 www.k-startup.go.kr)</li>
+
+
+					<li></li>
+                    <li><b>&gt; 사회적 기업인증서 발급 및 정보제공 기관</b> : 한국사회적기업진흥원 (www.socialenterprise.or.kr, 031-697-7700)</li>
+                </ul>
+            </div>
+         
+
+        <div class="detail">
+            <!-- [SR210817014] 본사정보 조회시 지사항목, 지사정보 조회시 본사정보 추출 -->
+            <!-- 지사 -->
+            
+        <p class="hide">조달업체 기업인증정보</p>
+        <table class="table_info">
+            <caption><span>조달업체 기업인증정보</span></caption>
+            <colgroup>
+            <col class="w20p">  
+            <col class="w30p">
+            <col class="w15p">
+            <col class="w35p">
+            </colgroup>
+            <tbody><tr>
+                <th><p>기업규모 등</p></th>
+                <td colspan="3"><div class="tb_inner">
+                    <input type="radio" title="기업구분코드" disabled="disabled">대기업(상호출자제한기업)&nbsp;&nbsp;&nbsp;
+                    <input type="radio" title="기업구분코드" disabled="disabled">중견기업&nbsp;&nbsp;&nbsp;
+                    <input type="radio" title="기업구분코드" checked="checked" disabled="disabled"><b>중소기업</b>&nbsp;&nbsp;&nbsp;
+                    <input type="radio" title="기업구분코드" disabled="disabled">비영리법인 등 기타</div>                  
+                </td>
+            </tr>
+            <tr style="border-bottom:2px #CCDEF6 solid;">
+                <th><p>소상공인,소기업,중기업</p></th>
+                <td><div class="tb_inner">
+                    <input type="radio" title="기업구분" disabled="disabled">소상공인&nbsp;
+                    <input type="radio" title="기업구분" disabled="disabled">소기업&nbsp;
+                    <input type="radio" title="기업구분" checked="checked" disabled="disabled"><b>중기업</b></div>
+                </td>
+                <th><p>유효기간</p></th>
+                <td style="text-align: center"><div class="tb_inner">2018/04/01 ~ 2024/03/31</div></td>
+                
+            </tr>
+            <tr style="border-bottom:2px #CCDEF6 solid;">
+                <th><p>여성기업</p></th>
+                <td><div class="tb_inner">
+                    <input type="radio" title="여성기업유무" disabled="disabled">예&nbsp;
+                    <input type="radio" title="여성기업유무" checked="checked" disabled="disabled"><b>아니오</b></div>
+                </td>
+                <th><p>유효기간</p></th>
+                
+                <td style="text-align: center"><div class="tb_inner">-</div></td>
+            </tr>
+            <tr style="border-bottom:2px #CCDEF6 solid;">
+                <th><p>장애인기업</p></th>
+                <td><div class="tb_inner">
+                    <input type="radio" title="장애인기업유무" disabled="disabled">예&nbsp;
+                    <input type="radio" title="장애인기업유무" checked="checked" disabled="disabled"><b>아니오</b></div>
+                </td>
+                <th><p>유효기간</p></th>
+                
+                <td style="text-align: center"><div class="tb_inner">-</div></td>
+            </tr>
+            <tr style="border-bottom:2px #CCDEF6 solid;">
+                <th><p>기술혁신형기업</p></th>
+                <td><div class="tb_inner">
+                    <input type="radio" title="기술혁신형기업유무" disabled="disabled">예&nbsp;
+                    <input type="radio" title="기술혁신형기업유무" checked="checked" disabled="disabled"><b>아니오</b></div>
+                </td>
+                <th><p>유효기간</p></th>
+                
+                <td style="text-align: center"><div class="tb_inner">-</div></td>
+            </tr>
+            <tr style="border-bottom:2px #CCDEF6 solid;">
+                <th><p>경영혁신형기업</p></th>
+                <td><div class="tb_inner">
+                    <input type="radio" title="경영혁신형기업유무" disabled="disabled">예&nbsp;
+                    <input type="radio" title="경영혁신형기업유무" checked="checked" disabled="disabled"><b>아니오</b></div>
+                </td>
+                <th><p>유효기간</p></th>
+                
+                <td style="text-align: center"><div class="tb_inner">-</div></td>
+            </tr>
+            <tr style="border-bottom:2px #CCDEF6 solid;">
+                <th><p>벤처기업</p></th>
+                <td><div class="tb_inner">
+                    <input type="radio" title="벤처기업유무" disabled="disabled">예&nbsp;
+                    <input type="radio" title="벤처기업유무" checked="checked" disabled="disabled"><b>아니오</b></div>
+                </td>
+                <th><p>유효기간</p></th>
+                
+                <td style="text-align: center"><div class="tb_inner">-</div></td>
+            </tr>
+            <tr style="border-bottom:2px #CCDEF6 solid;">
+                <th><p>수출유망기업</p></th>
+                <td><div class="tb_inner">
+                    <input type="radio" title="수출유망기업유무" disabled="disabled">예&nbsp;
+                    <input type="radio" title="수출유망기업유무" checked="checked" disabled="disabled"><b>아니오</b></div>
+                </td>
+                <th><p>유효기간</p></th>                
+                
+                <td style="text-align: center"><div class="tb_inner">-</div></td>
+            </tr>
+            <tr style="border-bottom:2px #CCDEF6 solid;">
+                <th><p>우수그린비즈</p></th>
+                <td><div class="tb_inner">
+                    <input type="radio" title="우수그린비즈유무" disabled="disabled">예&nbsp;
+                    <input type="radio" title="우수그린비즈유무" checked="checked" disabled="disabled"><b>아니오</b></div>
+                </td>
+                <th><p>유효기간</p></th>                
+                
+                <td style="text-align: center"><div class="tb_inner">-</div></td>
+            </tr>
+            <tr style="border-bottom:2px #CCDEF6 solid;">
+                <th><p>창업기업</p></th>
+                <td><div class="tb_inner">
+                    <input type="radio" title="창업기업유무" disabled="disabled">예&nbsp;
+                    <input type="radio" title="창업기업유무" checked="checked" disabled="disabled"><b>아니오</b></div>
+                </td>
+                <th><p>유효기간</p></th>                
+                
+                <td style="text-align: center"><div class="tb_inner">-</div></td>
+            </tr>
+            <tr>
+                <th><p>사회적기업</p></th>
+                <td><div class="tb_inner">
+                    <input type="radio" title="사회적기업유무" disabled="disabled">예&nbsp;
+                    <input type="radio" title="사회적기업유무" checked="checked" disabled="disabled"><b>아니오</b></div>
+                </td>
+                <th><p>유효기간</p></th>
+                
+                <td style="text-align: center"><div class="tb_inner">-</div></td>
+            </tr>
+         </tbody></table>
+         </div>
+         
+        <div class="info_h3"><h3>[업체상태정보]</h3></div>
+        
+        
+            <div class="description">
+                <ul>
+                    <li>&nbsp;■ <span class="red"><b>계약담당자(집행관)는 아래 법령 및 규정에 의하여 입찰참가자격 및 업체정보를 꼭 확인하세요.</b></span></li>
+                    <li>&nbsp;&nbsp;- <b>국가계약법시행규칙 제16조 및 나라장터 이용약관에 의거 나라장터에서 제공하는 정보에 대하여 </b></li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp; <b>업체정보를 최종적으로 확인 후 계약을 체결하여야 합니다. </b></li>
+                    <li>&nbsp;&nbsp;- <b>입찰참가자격등록규정 제8조에 따라 계약담당자는 입찰참가자가 고의 또는 과실로 변경등록을</b></li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp; <b>하지 않을 경우에 대비하여 낙찰자 선정과정에서 입찰참가자격을 확인하여야 합니다.</b></li>
+                    <li></li>
+                    <li>&nbsp;■ <span class="red"><b>나라장터에서 제공하는 조달업체 정보는 실시간 정보와 상이할 수 있으므로 다음 내용의 정보가 게재된 경우 해당 기관에 </b></span></li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp;<span class="red"><b>재확인 후 업무처리하시기 바랍니다.</b></span></li>
+                    <li>&nbsp;&nbsp;- <b>채무불이행 및 금융질서문란, 파산, 부도, 화의</b> : 한국신용정보원(1544-1040)</li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp; 부도(가계수표최종부도, 당좌수표최종부도, 약속어음최종부도, 어음.수표부도사실)</li>
+                    <li>&nbsp;&nbsp;- <b>폐업, 휴업(관할세무서) - <a href="http://www.hometax.go.kr" target="_blank"><ins>국세청 휴폐업 조회</ins></a>(홈텍스 연결)</b></li>
+                    <li>&nbsp;&nbsp;&nbsp;<b>[홈텍스] &gt; [조회/발급] &gt; [사업자상태] &gt; [사업자등록번호로 조회]를 클릭하시면 휴폐업 조회 서비스 이용이 가능합니다.</b></li>
+                    <li>&nbsp;&nbsp;<span class="red"><b>※ 국세청에서 해당 서비스를 직접 링크하거나, 자동조회프로그램을 이용하여 대량으로 조회할 수 없도록 제한하고 있으므로<br>&nbsp;&nbsp;&nbsp;&nbsp;[ 홈텍스 ]를 통하여 직접 조회하시기 바랍니다.</b></span></li>
+                    <li>&nbsp;<b> [ 영업정지 등 행정처분 ] </b></li>
+                    <li>&nbsp; <span class="red">※ 나라장터에는 아래의 일부 영업정지정보만 반영되어 있으므로 정확한 모든 행정처분 등 정보는 반드시 직접 해당기관에서<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 확인하여야 합니다. </span></li>
+                    <li>&nbsp;&nbsp;- <b>건설업 : 건설산업지식정보시스템(KISCON)(02-3496-3830)  - <a href="http://www.kiscon.net/cis/cis_info.asp" target="_blank"><ins>건설업행정처분조회</ins></a></b></li>
+                    <li>&nbsp;&nbsp;- <b>전기공사업 : 한국전기공사협회(1566-1177) - <a href="http://www.keca.or.kr/" target="_blank"><ins>협회사이트</ins></a></b></li>
+                    <li>&nbsp;&nbsp;- <b>정보통신공사업 : 한국정보통신공사협회(1522-1122) - <a href="http://www.kica.or.kr/" target="_blank"><ins>협회사이트</ins></a></b></li>
+                    <li>&nbsp;&nbsp;- <b>소방시설업 : 소방청 업체소재 관할 소방서 행정처분 문의</b></li>
+                    <li></li>
+                    <li>&nbsp;&nbsp;- <b>대기업,중소기업등 기업구분 정보</b>는 정보제공 차원이며 수시로 변경될 수 있으므로 입찰참가자격등 주요사항과 </li>
+                    <li>&nbsp;&nbsp;&nbsp;&nbsp; 관련될 경우  반드시 이를 재확인 후  입찰집행하여야 함</li>
+                    <li></li>
+                    <li>&nbsp;■ 본 화면에는 「국가를 당사자로 하는 계약에 관한 법률」, 「지방자치단체를 당사자로 하는 계약에 관한 법률」 또는 「공공기관의 운영에 관한 법률」등에 의<br>&nbsp;&nbsp;&nbsp;&nbsp;한  부정당업자의 입찰참가자격제한사항이 게재되어 있습니다.</li>
+                    <li></li>
+                    <li>&nbsp;■ <span class="blue"><b>부도, 채무불이행, 공공정보-신용회복지원, 연체, 금융질서문란 등 신용정보 상세내용은 신용정보관리규약을 참고하시기 <br>&nbsp;&nbsp;&nbsp; 바랍니다.</b></span></li>
+                    <li></li>
+                    
+                        <li>&nbsp;■ <span class="red"><b>건설업 행정처분 세부 내용은</b></span><span class="blue"><b><a href="javaScript:popup_openWindowScrollPos('/um/supplier/general/buildIndustryRegDtl.do?corpRegNo=1601110416415', '900', '600' ,'login_win', '1', '1');">건설산업지식정보시스템(KISCON)</a></b></span><b> 에서 확인 하실 수 있습니다.</b></li>
+                    
+                    
+                </ul>
+            </div>
+         
+
+        <div class="results emph_none">
+        <p class="hide">업체상태정보:번호,업체상태,시작일자,종료일자,시스템입력일자,업종명,행정처분기관구분,비고</p>
+        
+        <table class="table_list business_information">
+            <caption><span>업체상태정보</span></caption>
+            <colgroup>
+            <col class="w9p">
+            <col class="w25p">
+            <col class="w23p">
+            <col class="w23p">
+            <col class="w23p">
+            </colgroup>
+            <thead>
+            <tr>
+                <th rowspan="2">번호</th>
+                <th>업체상태</th>
+                <th>시작일자</th>
+                <th>종료일자</th>
+                <th>시스템입력일자</th>
+            </tr>
+            <tr>
+                <th>업종명</th>
+                <th>행정처분기관(정보연계기관)</th>
+                <th>비고</th>
+                <th>부정당제재 이력</th>
+            </tr>
+            </thead>
+            
+            
+                <tbody class="tb_data_none">
+                    <tr>
+                        <td colspan="4">
+                            <p><span class="blue">업체상태(부정당제재, 신용 등)가 정상입니다.</span></p>
+                            <input type="hidden" name="statCd" value="" title="업체상태코드">
+                        </td>
+                        <td style="text-align: center"> - </td>
+                    </tr>
+                </tbody>
+            
+        </table>
+        </div>
+         
+        <div class="info_h3"><h3>[통합정보]</h3></div>
+        <div class="results">
+        
+        <p class="hide">통합정보:조달실적,신용평가정보,쇼핑몰거래정지정보,품질검사결과</p>
+        <table class="table_list combine_information">
+            <caption><span>통합정보</span></caption>
+            <colgroup>
+            <col class="w25p">
+            <col class="w25p">
+            <col class="w25p">
+            <col class="w25p">
+            </colgroup>
+            
+            <thead>
+            <tr>
+                <th>신용평가정보</th>
+                <th>쇼핑몰거래정지정보</th>
+                <th>공사 신인도</th>
+                <th>품질검사결과</th>     
+            </tr>
+            </thead>
+            
+            <tbody>         
+           <tr>
+            
+            
+                <td><div><a class="btn_mdl" href="javascript:popup_openWindowScrollPos('https://www.g2b.go.kr:8079/ls/credit/listPageCreditEvalGradeInst.do', '900', '600' ,'creditEval_win', '1', '1');"><span>조회</span></a></div></td>
+                <td><div><a class="btn_mdl" href="javaScript:popup_openWindowScrollPos('https://www.g2b.go.kr:8194/mas/xzstop_popup.jsp?busin_no=4508100316', '900', '600' ,'shop_win', '1', '1');"><span>조회</span></a></div></td>
+                <!-- <td><div><a class="btn_mdl" href="javascript:toSupCredit()", '900', '600' ,'credit_win', '1', '1');"><span>조회</span></a></div></td>  -->
+                <td><div><a class="btn_mdl" href="javascript:toSupCredit();"><span>조회</span></a></div></td>
+            
+            
+                             
+                <td><div><span class="red">*차후제공예정</span></div></td>
+            </tr>
+            </tbody>
+         </table>
+         </div> 
+        
+        <div class="infoleft"><h3>[대표자정보] <button type="button" class="btn_help" title="도움말" onclick="javascript:supplierSelfInfoMng_tooltipHelpMsg('대표자정보')"></button></h3></div><a name="aLinkChfNm"></a>
+        <div class="detail">
+            <table class="table_info">
+                    <caption><span>대표자구분</span></caption>
+                <colgroup>
+                    <col class="w18p">
+                    <col class="w82p">
+                </colgroup>
+                <tbody><tr>
+                    <th><p>대표자구분</p></th>
+                    <td>
+                        <div class="tb_inner">
+                            
+                        </div>
+                    </td>
+                </tr> 
+                </tbody></table>
+        </div>
+        <div class="results emph_none">
+        <p class="hide">대표자정보:번호,대표자성명,주민등록번호,E-Mail,대표대표자여부,지문등록여부,지문등록불가능사유</p>
+        <table class="table_list representative_information1">
+            <caption><span>대표자 정보</span></caption>
+            <colgroup>
+                <col class="w6p">
+                <col class="w19p">
+                <col class="w19p">
+                <col class="w19p">
+                <col class="w19p">
+                <col class="w18p">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th rowspan="2">번호</th>
+                    <th>대표자성명<br>(영문성명)</th>
+                    <th>주민등록번호</th>                 
+                    
+                    
+                        <th>E-mail</th>
+                        <th>휴대전화번호</th>
+                             
+                    
+                      
+                    
+                    <th>대표대표자여부</th>
+                </tr>
+                <tr>
+                    <th colspan="2">지문등록여부</th>
+                    <th colspan="3">지문등록불가능사유</th>
+                </tr>
+            </thead>
+            
+                                   
+                                        
+                    
+                    
+                        
+                    
+                    
+                    <tbody onmouseover="this.className='on'" onmouseout="this.className=''" class="tbody_first">
+                        <tr>
+                            <td colspan="6" class="tline"></td>
+                        </tr>                   
+                        <tr>
+                            <td rowspan="2"><div>1</div></td>
+                            <td>
+                              <div>
+                                  강사돈
+                                  
+                              </div>
+                            </td>
+                    
+                            
+                                <td>
+                                    <div>
+                                        
+                                            
+                                            
+                                                
+                                                    <a href="javascript:toInjusticeChf('PN1000002039697','680920-1******');">680920-1******</a>
+                                                 
+                                                                                
+                                                                                 
+                                            
+                                        
+                                        
+                                        <input type="hidden" id="bizRegNo0" name="bizRegNo" value="" title="사업자등록번호">
+                                        <input type="hidden" id="encChfIdno0" name="encChfIdno" value="" title="지문등록불가능사유">
+                                        <input type="hidden" id="cl0" name="cl" value="ceo" title="cl">
+                                    </div>
+                                </td>
+                            
+                    
+                            
+                    
+                            
+                                <td><div>yeramfg@hanmail.net</div></td>
+                                <td><div>010-2012-7067</div></td>
+                            
+                            
+                            
+                            
+                            <td>
+                                <div>
+                                    
+                                        <input type="checkbox" checked="checked" disabled="disabled" title="대표대표자여부">
+                                    
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><div>&nbsp;&nbsp;</div></td>
+                            <td colspan="3"><div></div></td>
+                        </tr>
+                    </tbody>
+                
+            
+            
+        </table>
+        </div>
+
+        <div class="infoleft"><h3>[공급물품]</h3></div>
+        <div class="results">
+        
+        <p class="hide">공급물품 정보:번호,세부품명,세부품명번호,등록일자,갱신일자,대표품명</p>
+        <table class="table_list supply_article">
+            <caption><span>공급물품 정보</span></caption>
+            <colgroup>
+            <col class="w6p">
+            <col class="w25p">
+            <col class="w15p">
+            <col class="w18p">
+            <col class="w18p">
+            <col class="w18p">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>세부품명</th>
+                    <th>세부품명번호</th>
+                    <th>등록일시</th>
+                    <th>갱신일시</th>
+                    <th>대표품명</th>
+                </tr>
+            </thead>
+            
+            
+            <tbody>
+                
+                
+                
+                    
+                    
+                    <tr onmouseover="this.className='on'" onmouseout="this.className=''">
+                        <td><div>1</div></td>
+                        <td><div>프로그램개발용소프트웨어</div></td>
+                        <td><div>4323249901</div></td>
+                        <td><div>2016/08/17 10:19:59</div></td>
+                        <td><div>2016/08/17 10:19:59</div></td>
+                        <td><div><input type="checkbox" checked="checked" disabled="disabled" title="대표물품여부"></div></td>
+                    </tr>
+                    
+                
+                
+                </tbody>
+            
+            
+            
+         </table>
+         </div>
+
+        <div class="infoleft"><h3>[공장정보]</h3></div>
+        
+          <div class="fr"><a href="javascript:popup_fctryCntcInfoCnfmPopup();" class="btn_mdl"><span>공장연계정보조회</span></a></div>
+        
+        <!-- 시작 -->
+            <div class="results emph_none">
+            <p class="hide">공장정보:번호,공장명,공장관리번호,고객번호,사업장관리번호,우편번호,주소,전화번호,팩스번호,임대여부,임대시작일자,임대종료일자</p>
+            <table class="table_list factory_information">
+                <caption><span>공장정보</span></caption>
+                <colgroup>
+                <col class="w6p">
+                <col class="w20p">
+                <col class="w14p">
+                <col class="w20p">
+                <col class="w20p">
+                <col class="w20p">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th rowspan="3">번호</th>
+                        <th colspan="2">공장명</th>
+                        <th>공장관리번호</th>
+                        <th>고객번호</th>
+                        <th>사업장관리번호</th>
+                    </tr>
+                    <tr>
+                        <th>우편번호</th>
+                        <th colspan="4">주소</th>
+                    </tr>
+                    <tr>
+                        <th>전화번호</th>
+                        <th>팩스번호</th>
+                        <th>임대여부</th>
+                        <th>임대시작일자</th>
+                        <th>임대종료일자</th>
+                    </tr>
+                </thead>
+                
+                
+                    <tbody class="tb_data_none">
+                    <tr>
+                        <td colspan="6">입력된 정보가 없습니다.</td>
+                    </tr>
+                    </tbody>
+                
+            </table>
+            </div>
+        <!-- 끝 -->
+
+        <div class="infoleft fl"><h3>[제조물품(직접생산용역)]</h3></div>
+        
+            
+            
+            
+                
+                    <div class="fr">
+                       <a class="btn_mdl2" href="javascript:popup_openWindowScrollPos('/um/supplier/general/getMulpumData.do?bizRegNo=4508100316&amp;popupYn=Y', '870', '550' ,'direct_prodct_crtf_recpt', '1', '1');">
+                           <span class="blue">중소벤처기업부직접생산증명수신데이터조회</span>
+                       </a>
+                    </div>  
+                
+                
+            
+            
+                <div class="fr"><a href="javascript:popup_openWindowScrollPos('/um/supplier/general/directProdctCnfmMfgItemDtl.do?bizRegNo=4508100316&amp;popupYn=Y', '850', '590', 'direct_jo', '1', '1');" class="btn_mdl3"><span>직접생산확인부적합판정에따른등록말소이력조회</span></a></div> 
+            
+            
+         
+        <div class="results emph_none">
+        <p class="hide">제조물품 정보:번호,세부품명,세부품명번호,형식승인번호,형식승인기관,형식승인일,등록일시,갱신일시,대표품명,공장의업종(분류번호),유효기간시작일자,유효기간종료일자,제조생산증명서류,발급기관명,증서명,수의계약용여부</p>
+        <table class="table_list making_article">
+            <caption><span>제조물품 정보</span></caption>
+            <colgroup>
+            <col class="w6p">
+            <col class="w24p">
+            <col class="w20p">
+            <col class="w20p">
+            <col class="w15p">
+            <col class="w15p">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th rowspan="3">번호</th>
+                    <th>세부품명</th>
+                    <th>세부품명번호</th>
+                    <th>등록일시</th>
+                    <th colspan="2">갱신일시</th>
+                </tr>
+                <tr>
+                    <th>공장의업종(분류번호)</th>
+                    <th>납품실적증명서여부</th>
+                    <th>제조물품 유효기간</th>
+                    <th colspan="2">등록 유효기간<button type="button" class="btn_help" title="도움말" onclick="javascript:supplierSelfInfoMng_tooltipHelpMsg('등록유효기간')"></button></th>
+                </tr>
+                <tr>
+                    <th>제조증명서류</th>
+                    <th>발급자명</th>
+                    <th>증서명</th>
+                    <th>대표품명</th>
+                    <th>제조공장</th>
+                </tr>
+            </thead>
+            
+            
+            <tbody class="tb_data_none">
+                <tr>
+                    <td colspan="6">입력된 정보가 없습니다.</td>
+                </tr>
+            </tbody>
+            
+        </table>
+        </div>
+        
+        <div class="infoleft fl"><h3>[협업정보]</h3></div>
+        <div class="results emph_none">
+            <p class="hide">협업정보:세부물품분류번호,세부물품분류명,공장고나리번호,고객번호,사업장관리번호,협업사업자번호,우편번호,공장주소,임대여부,임대기간 제공</p>
+            <table class="table_list cprtn_information">
+                <caption><span>협업정보</span></caption>
+                <colgroup>
+                    <col class="w6p">
+                    <col class="w19p">
+                    <col class="w12p">
+                    <col class="w21p">
+                    <col class="w21p">
+                    <col class="w21p">
+                </colgroup>
+                <thead>             
+                    <tr>
+                        <th rowspan="3" scope="col">No.</th>
+                        <th scope="col">세부품명</th>
+                        <th scope="col">세부품명번호</th>
+                        <th scope="col">공장관리번호</th>
+                        <th scope="col">고객번호</th>
+                        <th scope="col">사업장관리번호</th>
+                    </tr>
+                    <tr>                            
+                        <th scope="col">우편번호</th>
+                        <th scope="col" colspan="4">공장주소</th>                           
+                    </tr>
+                    <tr>                            
+                        <th scope="col" colspan="2">협업사업자번호</th>
+                        <th scope="col">임대여부</th>
+                        <th scope="col">임대시작일자</th>
+                        <th scope="col">임대종료일자</th>                                                     
+                    </tr>       
+                </thead>
+                
+                    <tbody class="tb_data_none">
+                        <tr>
+                            <td colspan="6">입력된 정보가 없습니다.</td>
+                        </tr>
+                    </tbody>
+                
+                
+                             
+            </table>
+        </div>
+        
+        <div class="info_h3"><h3>[공사ㆍ용역ㆍ기타업종] <button type="button" class="btn_help" title="도움말" onclick="javascript:supplierSelfInfoMng_tooltipHelpMsg('공사용역기타물품')"></button></h3>
+        <!-- <div class="fr"><a class="btn_mdl" href="javascript:supplier_viewLicenseAssoModDt();"><span>협회갱신일자조회</span></a></div> -->
+        
+        </div>
+        <div class="results emph_none">
+        <p class="hide">면허사항 정보:번호,업종명,업종코드,등록번호,시공능력평가액,대표업종,등록일자,유효기간만료일자,평가액기준년도,등록일,갱신일자,업종상태</p>
+        <table class="table_list category_of_business">
+            <caption><span>면허사항 정보</span></caption>
+            <colgroup>
+            <col class="w6p">
+            <col class="w15p">
+            <col class="w15p">
+            <col class="w18p">
+            <col class="w18p">
+            <col class="w18p">
+            <col class="w10p">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th rowspan="3">번호</th>
+                    <th colspan="2">업종명</th>
+                    <th>업종코드</th>
+                    <th>등록번호</th>
+                    <th>시공능력평가액</th>
+                    <th rowspan="3">대표업종</th>
+                </tr>
+                <tr>
+                    <th>등록일</th>
+                    <th>유효기간만료일자</th>
+                    <th>평가액기준년도</th>
+                    <th>시스템등록일시</th>
+                    <th>갱신일시</th>
+                </tr>
+                <tr>
+                    <th colspan="2">업종상태</th>
+                    <th colspan="3"></th>
+                </tr>
+            </thead>
+            
+            
+                <tbody class="tb_data_none">
+                <tr>
+                    <td colspan="7">입력된 정보가 없습니다.</td>
+                </tr>
+                </tbody>
+            
+        </table>
+        </div>
+        
+        <!-- 주력분야정보 시작 -->
+        <div class="info_h3"><h3>[공사 : 전문업종 - 주력분야] </h3>
+        <!-- <button type="button" class="btn_help" title="도움말" onclick="javascript:supplierSelfInfoMng_tooltipHelpMsg('공사전문업종품주력분야')"></button> -->
+        <!-- <div class="fr"><a class="btn_mdl" href="javascript:supplier_viewMainIndustryHist('kosca');"><span>협회갱신일자조회</span></a></div> -->
+        <!-- <div class="fr"><a class="btn_mdl" href="javascript:supplier_viewMainIndustryHist('kiscon');"><span>주력분야해제일/특이사항 갱신내역조회</span></a></div> -->
+        </div>
+        <div class="results emph_none">
+        <p class="hide">주력분야 정보:번호,업종명(코드),주력분야명(주력분야코드),주력분야지정일,주력분야해제일,시공능력평가액,평가액기준년도,등록일시,갱신일시,협회갱신일시,키스콘갱신일시,특이사항</p>
+        <table class="table_list category_of_business">
+            <caption><span>주력분야 정보</span></caption>
+            <colgroup>
+            <col class="w6p">
+            <col class="w20p">
+            <col class="w10p">
+            <col class="w10p">
+            <col class="w15p">
+            <col class="w20p">
+            
+            <col class="w18p">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th rowspan="2">번호</th>
+                    <th rowspan="2">업종명(코드)</th>
+                    <th colspan="2">주력분야명(코드)</th>
+                    <th>시공능력평가액</th>
+                    <th>시스템등록일시</th>
+                    <!-- <th>협회갱신일시</th> -->
+                    <th rowspan="2">특이사항</th>
+                </tr>
+                <tr>
+                    <!-- <th>지정일</th> -->
+                    <th colspan="2">해제일</th>
+                    <th>평가액기준년도</th>
+                    <th>갱신일시</th>
+                    <!-- <th>키스콘갱신일시</th> -->
+                </tr>
+            </thead>
+            
+            
+                <tbody class="tb_data_none">
+                <tr>
+                    <td colspan="7">입력된 정보가 없습니다.</td>
+                </tr>
+                </tbody>
+            
+        </table>
+        </div>
+        <!-- 주력분야정보 끝 -->
+
+        <div class="infoleft"><h3>[입찰대리인]</h3><button type="button" class="btn_help" title="도움말" onclick="javascript:supplierSelfInfoMng_tooltipHelpMsg('대리인정보')"></button></div><a name="aLinkBidAttorney"></a>
+        <div class="results emph_none">
+        
+        <p class="hide">입찰대리인 정보:번호,성명,주민등록번호,부서,직책명,전호번호,E-Mail,휴대전화번호,팩스번호,자격구분,지문등록여부,지문등록불가능사유</p>
+        <table class="table_list bid_deputy1">
+            <caption><span>입찰대리인 정보</span></caption>
+            <colgroup>
+                <col class="w6p">
+                <col class="w20p">
+                <col class="w20p">
+                <col class="w20p">
+                <col class="w17p">
+                <col class="w17p">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th rowspan="3">번호</th>
+                    <th>성명</th>
+                    <th>주민등록번호</th>
+                    <th>부서</th>
+                    <th>직책명</th>
+                    <th>전화번호</th>
+                </tr>
+                <tr>
+                    
+                        <th>E-mail</th>
+                        <th>휴대전화번호</th>
+                    
+                    
+                    
+                    
+                    <th>팩스번호</th>
+                    <th colspan="2">자격구분</th>
+                </tr>
+                <tr>
+                    <th colspan="2">지문등록여부</th>
+                    <th colspan="3">지문등록불가능사유</th>
+                </tr>
+            </thead>
+            
+                                           
+                                
+                    
+                    
+                    
+                    
+                        
+                    
+                
+                    <tbody onmouseover="this.className='on'" onmouseout="this.className=''" class="tbody_first">
+                        <tr>
+                            <td colspan="6" class="tline"></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="3"><div>1</div></td>
+                            <td><div>김효원</div></td>
+                            <td>
+                                <div>
+                                    
+                                        
+                                        
+                                            
+                                                <a href="javascript:toInjusticeChf('PN1000002890971','910905-2******');">910905-2******</a>
+                                            
+                                            
+                                        
+                                    
+                                </div>
+                            </td>
+                            <td><div>코칭연구소</div></td>
+                            <td><div>사원</div></td>
+                            <td><div></div></td>
+                        </tr>
+                        <tr>
+                            
+                                <td><div>tori0915@nate.com</div></td>
+                                <td><div>010-8847-2018</div></td>
+                            
+                            
+                            
+                            <td><div></div></td>
+                            <td colspan="2"><div>4대보험</div></td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><div>&nbsp; 지문등록</div></td>
+                            <td colspan="3"><div></div></td>
+                        </tr>
+                    </tbody>
+                
+            
+            
+        </table>
+        </div>
+
+        
+        <!-- [SR210817014] 본사정보 조회시 지사항목, 지사정보 조회시 본사정보 추출 -->
+        <!-- 본사 -->
+        
+        <div class="infoleft"><h3>[지사정보]</h3></div>
+        <div class="results emph_none">
+        <p class="hide">지사정보:번호,사업자등록번호,상호명,지역코드,전화번호,팩스번호,삭제여부,우편번호,주소,지사대표자,주민등록번호</p>
+        <table class="table_list branch_information">
+            <caption><span>지사 정보</span></caption>
+            <colgroup>
+            <col class="w6p">
+            <col class="w15p">
+            <col class="w25p">
+            <col class="w14p">
+            <col class="w15p">
+            <col class="w15p">
+            <col class="w10p">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th rowspan="3">번호</th>
+                    <th>사업자등록번호</th>
+                    <th>상호명<br>(영문상호명)</th>
+                    <th>지역코드</th>
+                    <th>전화번호</th>
+                    <th>팩스번호</th>
+                    <th rowspan="3">삭제여부</th>
+                </tr>
+                <tr>
+                    <th colspan="2">주소<br>(영문주소)</th>
+                    <th>우편번호</th>
+                    <th>지사대표자<br>(영문성명)</th>
+                    <th>주민등록번호</th>
+                </tr>
+                <tr>
+                     <th colspan="5">등록사업 내용</th>
+                </tr>
+            </thead>
+            
+            
+                <tbody class="tb_data_none">
+                <tr>
+                    <td colspan="7">입력된 정보가 없습니다.</td>
+                </tr>
+                </tbody>
+            
+        </table>
+        </div>
+        
+        <!-- 지사 -->
+        
+        
+        
+        <div class="infoleft"><h3>[지역변경이력]</h3></div>
+        <div class="results">
+        <p class="hide">지역변경이력:번호,갱신일시,속성명,변경전지역명,변경후지역명</p>
+        <table class="table_list area_change_history">
+            <caption><span>지역변경이력</span></caption>
+            <colgroup>
+            <col class="w6p">
+            <col class="w20p">
+            <col class="w14p">
+            <col class="w30p">
+            <col class="w30p">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>갱신일시</th>
+                    <th>속성명</th>
+                    <th>변경전지역명</th>
+                    <th>변경후지역명</th>
+                </tr>
+            </thead>
+            
+            
+                <tbody class="tb_data_none">
+                <tr>
+                    <td colspan="5">변경 이력이 없습니다.</td>
+                </tr>
+                </tbody>
+            
+        </table>
+        </div>
+        </form>
+        
+            <a name="infoCheck"></a>
+            <div class="description">
+                <ul>
+                    <li></li>
+                    <li style="text-align: center"><b>나라장터에 등록된 귀 사의 자기정보의 이상 유무를 확인하여 주시기 바랍니다.</b></li>
+                    <li></li>
+                    <li style="text-align: center">
+                        <a class="btn_mdl" href="javascript:toConfirm();"><span>등록정보와 일치합니다</span></a>
+                        &nbsp;&nbsp;
+                        
+	                        
+	                            <a class="btn_mdl" href="javascript:toSelfInfoUpdate();"><span>변경할 사항이 있습니다</span></a>
+	                        
+	                             
+                        
+                        
+                    </li>
+                    <li></li>
+                    <li style="text-align: center"><b>-입찰무효 사유 등 특히 주의를 요하는 사항-</b></li>
+                    <li>
+                    &nbsp;<a href="#aLinkSupplierNm">상호(또는 법인의 명칭)</a>, <a href="#aLinkChfNm">대표자</a> : 법인의 경우 법인등기부등본, 개인사업자인 경우 사업자등록증과 대조 확인,
+                    변경(추가,삭제포함)이 있는 경우 변경등록 하여야 함
+                    <br>
+                    &nbsp;<a href="#aLinkBidAttorney">입찰대리인</a>:임직원에 한하며, 임원은 등기부등본, 직원은 4대보험 가입증명원 등으로 입증
+                    <br><br>
+                    &nbsp;* 기업인증정보의 경우 해당 인증정보를 관리하고 있는 기관으로부터 연계된 정보입니다.<br>해당정보가 이상이 있는 경우 소관기관에 문의해 주시기 바랍니다.
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="button_wrap">
+                <div class="button3 mbutton3">
+					
+						
+							<a class="btn_mdl" href="javascript:toSelfInfoUpdate();"><span>수정(자기정보확인)</span></a>
+						
+						
+					
+					
+                        
+                        <a class="btn_mdl" href="javascript:toPrintRex();"><span>출력</span></a>
+                    
+                    
+                </div>
+            </div>
+        
+
+		
+
+        <form id="frm_korcham" name="frm_korcham" method="post" action="">
+        <input type="hidden" name="bizRegNo" value="4508100316" title="사업자등록번호">
+        </form>
+        <iframe name="fileDown" width="0" height="0" frameborder="0" title="파일다운로드" src=""></iframe>
+    </div>
+    
+
+
+
+
+
+
+
+
+</div>
+    <!-- Footer Include -->
+   
+   
+<script type="text/javascript">
+try{
+    if("" == "login"){
+        document.location="#infoCheck";
+    }   
+}catch(e){}
+</script>
+
+
+</body>################# https://www.g2b.go.kr:8079/ls/perf/selectCreditDtlC.do #################<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<title>신인도</title>
+
+
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/body.css">
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/width.css">
+<!--[if IE]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie.css" />
+<![endif]-->
+<!--[if IE 8]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie8.css" />
+<![endif]-->
+<!--[if IE 7]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie7.css" />
+<![endif]-->
+<!--[if IE 6]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie6.css" />
+<script src="/gov/koneps/co/js/png_ie6.js" type="text/livescript"></script>
+<script language="javascript" type="text/javascript">
+//<![CDATA[
+DD_belatedPNG.fix('.png, .win, .btn_mdl, .btn_view, span, strong, img, li');  // png 이미지 적용
+//]]>
+</script>
+<![endif]-->
+
+<script type="text/javascript" src="/gov/koneps/co/js/crossDomain.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/popup.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/wz_tooltip.js"></script> </head><body><div id="WzTtDiV" style="visibility: hidden; position: absolute; overflow: hidden; padding: 0px; width: 0px; left: 0px; top: 0px;"></div>  
+<script type="text/javascript" src="/gov/koneps/co/js/validator.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/util.js"></script>
+<script type="text/javascript" src="/gov/koneps/ls/js/lsUtil.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/ajax.js"></script>    
+<script type="text/javascript" src="/gov/koneps/co/js/commonPopup.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/datepicker.js"></script>
+<script type="text/javascript" src="/gov/koneps/ls/helpmsg/creditDtl.js"></script>
+<script type="text/javaScript" language="javascript">
+    function fnSearchM(){
+        
+        if($("#searchBizRegNo").val() ==""){
+            alert("사업자등록번호를 입력하여 주세요.");
+            $("#searchBizRegNo").focus();
+            return;
+        }
+          if($("#criteriaYmd").val() ==""){
+            alert("기준일자를 입력하여 주세요.");
+            $("#industrial").focus();
+            return;
+        }    
+        
+        document.frm.action="/ls/perf/selectCreditDtlM.do";
+        document.frm.target="_self";
+        document.frm.submit();
+        return;
+    }
+
+    function fnSearchC(){
+        
+        if($("#searchBizRegNo").val() ==""){
+            alert("사업자등록번호를 입력하여 주세요.");
+            $("#valLmt").focus();
+            return;
+        }
+         if($("#criteriaYmd").val() ==""){
+            alert("기준일자를 입력하여 주세요.");
+            $("#industrial").focus();
+            return;
+        }   
+        
+        document.frm.action="/ls/perf/selectCreditDtlC.do";
+        document.frm.target="_self";
+        document.frm.submit();
+        return;
+    }
+    
+    //xml내려받기
+    function fnXmlDownLoad(){
+        $("#frm").attr("target","xml").attr("action","/ls/perf/creditXmlDown.do").submit();
+    }
+
+    function fnDetail(gubun, bizRegNo, criteriaYmd, regSeqNo, histSeqno, judgeCriteriaCl, certificationCl){
+        var f=document.frm;
+        var width = "520";
+        var height = "400";
+        var url = "";
+
+        if(gubun == "021"){// 건산법처벌
+            height = "450";
+            url ="/ls/perf/selectConstPenalty.do";
+        }else if(gubun == "031"){// 계약질서
+            url ="/ls/perf/selectContOrder.do";
+        }else if(gubun == "041"){// 부실벌점
+            url ="/ls/perf/selectInsuffPenalty.do";
+        }else if(gubun == "051"){// 안전관리비
+            height = "450";
+            url ="/ls/perf/selectSafeMngExpense.do";
+        }else if(gubun == "061"){// 신인우수
+            url ="/ls/perf/selectExcellentConst.do";
+        }else if(gubun == "071"){// 최저가낙찰
+            url ="/ls/perf/selectBottomBid.do";
+        }else if(gubun == "081"){// 평균재해율
+            url ="/ls/perf/selectAvgDisasterRat.do";
+        }else if(gubun == "091"){// 하도우수
+            url ="/ls/perf/selectSubcontPerf.do";
+        }else if(gubun == "101"){// 하도처벌
+            url ="/ls/perf/selectSubcontImpSurc.do";
+        }else if(gubun == "111"){// 환경처벌
+            url ="/ls/perf/selectEnvironPenalty.do";
+        }else if(gubun == "121"){// 행정처분
+            height = "500";
+            url ="/ls/perf/selectExecPenalty.do";
+        }else if(gubun == "131"){// 산재보고
+            url ="/ls/perf/selectIndustDisaster.do";
+        }else if(gubun == "151" || gubun == "431"){// 녹색건설관련인증 또는 제로에너지건축물
+            height = "500";
+            url ="/ls/perf/selectGreen.do";
+        }else if(gubun == "291"){// 임금체불
+            url ="/ls/perf/selectOverdueWages.do";
+        }else if(gubun == "300"){// 고용개선조치미이행
+            url ="/ls/perf/selectEmpImpMngNflfl.do";
+        }else if(gubun == "301"){// 고용형태
+            url ="/ls/perf/selectEmplymType.do";
+        }
+        
+        var aParam = {};
+        aParam["bizRegNo"] = bizRegNo;
+        aParam["criteriaYmd"] = criteriaYmd;
+        aParam["regSeqNo"] = regSeqNo;
+        aParam["histSeqno"] = histSeqno;
+        aParam["judgeCriteriaCl"] = judgeCriteriaCl;
+        aParam["certificationCl"] = certificationCl;
+
+        popup_openWindowScroll(url+popup_createGetParamStr(aParam), width, height, "creditDetail");
+    }
+    
+    function fnSrchSupplier(){//업체검색
+        var width = 650;
+        var height = 600;
+        var url = "/ls/general/selectSupplierList.do";
+        popup_openWindowScroll(url, width, height, "searchSupplier");
+
+    }
+    
+    function callback_supplier(aParam){//업체검색 callback
+        $("#searchBizRegNo").val(aParam["bizRegNo"]);
+        $("#supplierNm").val(aParam["supplierNm"]);
+    }
+
+</script>
+
+
+<div id="content_wrap">
+    <div id="content_header">
+        <h2>신인도</h2>
+        
+            <div id="help"><button type="button" id="btn_help" title="새창열림" onclick="javascript:util_viewOnlineManual('/WEB-INF/jsp/ls/perf/creditDtl.jsp','','/WEB-INF/jsp/ls/perf/creditDtl.jsp','/ls/perf/selectCreditDtlC.do','null');"><span>온라인매뉴얼</span></button></div>
+        
+        
+    </div>
+    <div id="container">
+    
+    
+    <div class="description">
+        <ol>
+            
+            
+            
+            <li> 입력한 기준일자를 기준으로 최근 1년간의 신인도 자료들을 보여줍니다. <br>
+            (부실벌점은 최근 6개월, 하도급과징금, 하도급상습위반, 고용개선조치미이행은 최근 2년, 표준계약서감점, 최저임금위반은 최근 3년, 동반성장지수, 공정거래협약이행실적, 녹색인증, 공공시설분야 대중소기업 협력프로그램 우수업체는 유효기한까지의 자료, 임금체불은 기준일자 기준으로 공개중인 자료)</li>
+            
+            
+            <li><span class="red">기준일자</span>를 클릭하시면 자기신인도 정보를 상세 조회 하실수 있습니다.</li>
+            <li>건산법처벌, 부실벌점, 안전관리비, 평균재해율, 하도급실적, 하도급과징금, 환경처벌, 산재보고, 하도급상습위반 자료에  <span class="red">유효기한</span>이 추가 되었습니다.<br>
+                각 자료는 <span class="red">유효기한</span>까지만 적용됩니다. <span class="red">유효기한을 확인하시기 바랍니다.</span></li>
+               
+             
+            
+                <li>건설업체 산업재해발생률 산정 기준이 <b>평균재해율</b>에서 <b>사고사망만인율</b>로 개정되었습니다.(산업안전보건법 시행규칙 개정, '18.12.31)('20.7.1부터 시행)</li>
+             
+                
+            <li>본 정보는 수요기관 사용자가 나라장터에 직접 조회 가능하므로 <span class="red">출력 기능은 제공하지 않습니다.</span></li>   
+        </ol>
+    </div>
+    
+        <!-- Content Include -->
+        <form id="frm" name="frm" method="post" action="">
+        <input type="hidden" id="taskCl" name="taskCl" value="C"><!-- 조달업체, 수요기관 구분 -->
+            <div class="section">
+                <table summary="신인도 검색입력 ">
+                    <caption><span>신인도 검색</span></caption>
+                    <colgroup>
+                        <col class="w18p">
+                        <col class="w32p">
+                        <col class="w18p">
+                        <col class="w32p">
+                    </colgroup>
+                   
+                    <tbody><tr>
+                        <th><label for="searchBizRegNo">사업자등록번호</label></th>
+                        <td colspan="3">
+                            
+                            <input type="text" id="searchBizRegNo" name="searchBizRegNo" class="i10 bg" maxlength="10" value="4508100316" title="사업자등록번호" readonly="readonly">
+                            <input type="text" id="supplierNm" name="supplierNm" class="i20 bg" maxlength="20" value="비드코칭연구소 주식회사" title="상호명" readonly="readonly">
+                            
+                            
+                        </td>
+                   </tr>
+                   <tr>
+                        <th scope="col"><label for="searchJudgeCriteriaCl">심사기준구분</label></th>
+                        <td scope="col">
+                            <div class="fl">
+                            <select id="searchJudgeCriteriaCl" name="searchJudgeCriteriaCl">
+                                <option value="1">조달청기준</option>
+                                <option value="2">지자체기준</option>
+                            </select>
+                            </div>
+                        </td>
+                        <th><label for="criteriaYmd">기준일자</label></th>
+                        <td><div class="fl">
+                            <input type="text" id="criteriaYmd" name="criteriaYmd" class="i10" maxlength="10" value="2023/04/21" onblur="util_checkDate(this,'/');">
+                            <button type="button" id="btn_datepicker1" class="btn_datepicker" onclick="displayDp('criteriaYmd')" title="기준일자"><span class="blind">기준일자</span></button>
+                            </div>
+                            <div class="fr">
+                            
+                            
+                            <a onclick="fnSearchC();" class="btn_search" id="bt_search"><span>검 색</span></a>
+                            
+                            </div>
+                        </td>
+                    </tr>
+                </tbody></table>
+            </div>
+
+
+                                    
+            
+
+            
+            
+
+            
+                        
+                     
+
+            
+            
+            
+                        
+            
+
+            
+
+            
+
+            
+
+            
+
+            
+
+            
+
+            
+                                                                                     
+            
+
+            
+
+       
+            
+                                    
+            
+
+            
+
+            
+            
+            
+            
+             
+            
+
+            
+
+            
+            
+            
+            
+            
+
+            
+            
+            
+                                                            
+            
+               
+                <div class="results">
+                    <table summary="결과 메세지">
+                        <caption><span>결과 메세지</span></caption>
+                        <colgroup>
+                            <col class="w100p">
+                        </colgroup>
+                        <tbody><tr>
+                            <td>검색버튼을 클릭하여 검색하시기 바랍니다.</td>
+                        </tr>
+                    </tbody></table>
+                </div>
+              
+              
+            
+        </form>
+    </div>
+</div>
+
+<iframe name="xml" width="0" height="0" frameborder="0" title="iframe"></iframe>
+
+ 
+
+
+</body>################# https://www.g2b.go.kr:8079/ls/perf/selectTechnInfoListC.do #################<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<title>기술인력 목록</title>
+
+
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/body.css">
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/width.css">
+<!--[if IE]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie.css" />
+<![endif]-->
+<!--[if IE 8]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie8.css" />
+<![endif]-->
+<!--[if IE 7]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie7.css" />
+<![endif]-->
+<!--[if IE 6]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie6.css" />
+<script src="/gov/koneps/co/js/png_ie6.js" type="text/livescript"></script>
+<script language="javascript" type="text/javascript">
+//<![CDATA[
+DD_belatedPNG.fix('.png, .win, .btn_mdl, .btn_view, span, strong, img, li');  // png 이미지 적용
+//]]>
+</script>
+<![endif]-->
+
+<script type="text/javascript" src="/gov/koneps/co/js/crossDomain.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/popup.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/wz_tooltip.js"></script> </head><body><div id="WzTtDiV" style="visibility: hidden; position: absolute; overflow: hidden; padding: 0px; width: 0px; left: 0px; top: 0px;"></div>  
+<script type="text/javascript" src="/gov/koneps/co/js/validator.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/util.js"></script>
+<script type="text/javascript" src="/gov/koneps/ls/js/lsUtil.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/ajax.js"></script> 	
+<script type="text/javascript" src="/gov/koneps/co/js/commonPopup.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/datepicker.js"></script>
+<script type="text/javaScript" language="javascript">
+//<![CDATA[
+	$(document).ready(function(){
+
+		if($("#suppoTechnClCd").val() == "40"){
+			fnPqIndustryDetail();
+		}
+	});
+
+	
+	function fnSearch(suppoTechnClCd){//기술인력입력 조회
+		
+		// 2014.5.29 한국정보통신공사협회의 연계문제로 메세지 뛰어줌 	
+/* 		if($("#assoCd").val() == "03"){
+			alert("한국정보통신공사협회와 나라장터간 연계 시스템 개선시 까지 \n\n2014.6.2. 이후 등록된 기술인정보는 조회 되지 않습니다. \n\n업무 처리에 참고하시기 바랍니다.") ; 			
+		} */
+		
+		if($("#taskCl").val() == "G"){
+			if("" == "P"){
+				if(!util_checkDateFromToMust(document.frm.bidStartYmd,document.frm.bidEndYmd,"입찰참가일자")){
+					return;
+				}
+				if( !lsUtil_periodCheck(document.frm.bidStartYmd.value,document.frm.bidEndYmd.value)){
+					return;
+				}
+			}
+			
+			if(util_isNullSpace($("#bizRegNo").val())){
+				alert("사업자등록번호를 입력하여 주세요.");
+				$("#bizRegNo").focus();
+				return;
+			}
+		}
+		if(util_isNullSpace($("#criteriaYmd").val())){
+			alert("기준일자를 입력하여 주세요.");
+			$("#criteriaYmd").focus();
+			return;
+		}
+	
+		if(util_isNullSpace($("#searchReceiveYmd").val())){
+			alert("수신일자를 입력하여 주세요.");
+			$("#searchReceiveYmd").focus();
+			return;
+		}
+		
+		if(suppoTechnClCd != undefined){
+			$("#suppoTechnClCd").val(suppoTechnClCd);
+		}
+		
+
+		if($("#dutyField1").val() != undefined){
+			$("#dutyField").val($("#dutyField1").val());
+		}
+
+		
+	// 20130411 신경운 추가 - 적합/부적합 우선순위 변경
+		if($("#searchPqIndustryCd1").val() != "00") {
+			if($("#searchPqIndustryCd1").val() != "01"){
+				if($("#searchPqIndustryCd").val() != $("#searchPqIndustryCd1").val()){
+					if($("#searchPqIndustryDetailCd1").val() != undefined){
+						$("#searchPqIndustryDetailCd").val("Y");			
+					}
+				}else {
+					if($("#searchPqIndustryDetailCd1").val() != undefined){
+						$("#searchPqIndustryDetailCd").val($("#searchPqIndustryDetailCd1").val());
+					}
+				}
+			}else if($("#searchPqIndustryCd1").val() == "01" && $("#searchPqIndustryDetailCd1").val() =="Y"){
+				$("#searchPqIndustryDetailCd").val("00");
+			}else {	
+					if($("#searchPqIndustryDetailCd1").val() != undefined){
+						$("#searchPqIndustryDetailCd").val($("#searchPqIndustryDetailCd1").val());
+					}					
+			}			
+		}
+	
+		if($("#searchPqIndustryCd1").val() != undefined){
+			$("#searchPqIndustryCd").val($("#searchPqIndustryCd1").val());
+		}
+
+		if($("#searchPqIndustryCd1").val() == "00" && $("#searchPqIndustryDetailCd1").val() == "Y"){
+			$("#searchPqIndustryDetailCd").val("00");
+		}
+		
+		if($("#taskCl").val() == "G"){
+			if($("#assoCd").val() == "01"){
+				$("#frm").attr("target","_self").attr("action","/ls/perf/selectTechnInfoListM.do").submit();
+			}else{
+				$("#frm").attr("target","_self").attr("action","/ls/perf/selectTechnInfo1ListM.do").submit();
+			}
+		}else{
+			if($("#assoCd").val() == "01"){
+				$("#frm").attr("target","_self").attr("action","/ls/perf/selectTechnInfoListC.do").submit();
+			}else{
+				$("#frm").attr("target","_self").attr("action","/ls/perf/selectTechnInfo1ListC.do").submit();
+			}
+		}
+	}
+
+	function listRefresh(){		
+		fnSearch($("#suppoTechnClCd").val());
+	}
+	
+    function fnDetail(receiveYmd, pvtNo){//기술인력입력상세
+        $("#receiveYmd").val(receiveYmd);
+        $("#pvtNo").val(pvtNo);
+        $("#frm").attr("target","_self").attr("action","/ls/techn/selectTechnRegDtl.do").submit();
+    }
+	
+	function fnSrchSupplier(){//업체검색
+		var width = 650;
+		var height = 600;
+		var url = "/ls/general/selectSupplierList.do";
+		popup_openWindowScroll(url, width, height, "searchSupplier");
+	}
+	
+	function callback_supplier(aParam){//업체검색 callback
+		
+		$("#bizRegNo").val(aParam["bizRegNo"]);
+		$("#supplierNm").val(aParam["supplierNm"]);
+	}
+
+    function fnPqIndustryDetail(){
+    	var html ="";
+    	if($("#searchPqIndustryCd1").val() == "01"){
+    		$.getJSON("/ls/techn/getJSONPqIndustryDetailList.do",function(result){
+    			html = "<option value='00'>전 체</option>";
+    			$.each(result.data,function(i){
+    				html += "<option value='"+result.data[i].totalCopertnCd+"'>"+result.data[i].totalCopertnCdNm+"</option>";
+    				
+    			});
+    			$("#searchPqIndustryDetailCd1").html(html);
+    			$("#searchPqIndustryDetailCd1").val($("#searchPqIndustryDetailCd").val());
+    		});
+
+    	}else if($("#searchPqIndustryCd1").val() != "00" && $("#searchPqIndustryCd1").val() != "01"){
+    		
+    		html = "<option value='00'>전 체</option>"
+    			+"<option value='Y'>적 합</option>"
+    			+"<option value='N'>부적합</option>";
+
+    		$("#searchPqIndustryDetailCd1").html(html);
+    		$("#searchPqIndustryDetailCd1").val($("#searchPqIndustryDetailCd").val());
+
+    		
+    	}else{
+    		$("#pqDetailView").hide();
+    	}
+    }
+    
+    function fnMinusDate(){
+
+        var crudate = $("#criteriaYmd").val().replace(/\//gi,"");
+        var year  = crudate.substr(0,4);
+        var month = crudate.substr(4,2) - 1; // 1월=0,12월=11
+        var day   = crudate.substr(6,2);
+		
+        var kijundateA = new Date(year,month,day);
+        var kijundateB = new Date(Date.parse(kijundateA) - 49 * 1000 * 60 * 60 * 24) // 날짜포함해서 50일 그니까 결론 -49
+        var kijundateC = toTimeString(kijundateB);
+        $("#criteriaYmd").val(kijundateC.substr(0,4) +"/"+kijundateC.substr(4,2)+"/"+kijundateC.substr(6,2));
+    }
+    
+    function toTimeString(date) { //formatTime(date)
+        var year  = date.getFullYear();
+        var month = date.getMonth() + 1; // 1월=0,12월=11이므로 1 더함
+        var day   = date.getDate();
+
+        if (("" + month).length == 1) { month = "0" + month; }
+        if (("" + day).length   == 1) { day   = "0" + day;   }
+
+        return ("" + year + month + day)
+    }
+    
+  //xml내려받기
+	function fnXmlDownLoad(){
+		$("#frm").attr("target","xml").attr("action","/ls/perf/technXmlDown.do").submit();
+	}
+    
+    function js_goCheckSelectAssoCd(){
+        var trReceiveYmd = document.getElementById('trReceiveYmd');
+        if($("#assoCd").val() == "01"){
+        	trReceiveYmd.style.display = "block";
+        }else{
+        	trReceiveYmd.style.display = "none";           
+        }
+    }
+
+    //직무별 기술자등급 현황
+    function fnSearchTechGradeStatus(){
+        var url = "";
+        if($("#taskCl").val() == "G"){ //기관
+        	url = "/ls/perf/technGradeStatusPopupM.do";
+        }else{ //업체
+        	url = "/ls/perf/technGradeStatusPopupC.do";
+        }
+        
+        var aParam = {};
+        aParam["assoCd"] = $("#assoCd").val();
+        aParam["bizRegNo"] = $("#bizRegNo").val();
+        aParam["searchReceiveYmd"] = $("#searchReceiveYmd").val();
+        aParam["criteriaYmd"] = $("#criteriaYmd").val();
+        aParam["suppoTechnClCd"] = $("#suppoTechnClCd").val();
+        popup_openWindowScroll(url+popup_createGetParamStr(aParam), 700, 600, "techGradeStatus");        
+    }
+    
+    $(document).ready(function(){
+    	js_goCheckSelectAssoCd();
+    });
+    
+
+//]]>
+</script>   
+
+
+<div id="content_wrap">
+    <div id="content_header">
+		<h2>기술인력 정보 목록</h2>
+		<div id="help"><button type="button" id="btn_help" title="새창열림" onclick="javascript:util_viewOnlineManual('/WEB-INF/jsp/ls/perf/technInfoList.jsp','','/WEB-INF/jsp/ls/perf/technInfoList.jsp','/ls/perf/selectTechnInfoListC.do','null');"><span>온라인매뉴얼</span></button></div>
+	</div>
+    <div id="container">
+    	
+		
+	    	<div class="description">
+			    <ol>
+				    <li>등록된 기술자가 맞지 않을 경우 협회에 확인 하시기 바랍니다.</li>
+				    <li>기술자 보유현황과 적격심사 결과가 일치하지 않을 경우 집행관에 직접자료 제출 하시기 바랍니다.</li>
+				    <li>조달청 시설공사 적격심사세부기준 제6조(적격심사 결격 및 재심사) 참조<br>
+				    	정보 확인후 보유한 기술인정보와 일치하지 않을 경우 한국건설기술인협회에 문의하시기 바랍니다.</li>
+				    <li>경력기술자 조회시 일반기술자만 점수에 반영되어 조회되며, 입찰참가자격사전심사에서 경력기술자 평가는 일반기술자에 한하여 평가합니다.</li>
+				    <li>본 정보는 수요기관 사용자가 나라장터에서 직접 조회 가능하므로 <span class="red">출력 기능은 제공하지 않습니다.</span></li>
+<!-- 				    <li>한국정보통신공사협회와 나라장터간 연계 시스템 개선시 까지 2014.6.2. 이후 등록된 기술인정보는 조회 되지 않습니다. </li> -->				     				    
+			    </ol>
+			</div>
+		
+        <!-- Content Include -->
+    	<form id="frm" name="frm" method="post" action="">
+			<input type="hidden" id="suppoTechnClCd" name="suppoTechnClCd" value="10">
+			<input type="hidden" id="receiveYmd" name="receiveYmd">
+			<input type="hidden" id="pvtNo" name="pvtNo">
+			<input type="hidden" id="taskCl" name="taskCl" value="C">
+			<input type="hidden" id="searchYn" name="Y">
+			<input type="hidden" id="minusYn" name="minusYn" value="">
+			<input type="hidden" id="dutyField" name="dutyField" value="00">
+    		<input type="hidden" id="searchPqIndustryDetailCd" name="searchPqIndustryDetailCd" value="00">
+			<input type="hidden" id="searchPqIndustryCd" name="searchPqIndustryCd" value="00">
+			<div class="section">
+				<div id="trReceiveYmd" style="display: block;">
+                    </div><table summary="기술인력 검색 입력 폼 ">
+					<caption><span>기술인력 정보 목록</span></caption>
+					<colgroup>
+					    <col class="w18p">
+					    <col class="">
+					    <col class="w18p">
+					    <col class="w32p">
+				    </colgroup>
+				    
+				    <tbody><tr>
+				        <th scope="col"><label for="assoCd">자료제공협회</label></th>
+				        <td scope="col" colspan="3">
+				        	<select id="assoCd" name="assoCd" onclick="js_goCheckSelectAssoCd();">
+				        		
+					        		<option value="01" selected="selected">한국건설기술인협회</option>
+					        	
+					        		<option value="02">한국전기공사협회</option>
+					        	
+					        		<option value="03">한국정보통신공사협회</option>
+					        	
+				        	</select>
+				        </td>
+				    </tr>
+				    <tr>
+                        <th scope="col"><label for="searchReceiveYmd">수신일자</label></th>
+                        <td scope="col" colspan="3">
+                            <input type="text" id="searchReceiveYmd" name="searchReceiveYmd" size="" class="i10" maxlength="10" value="2023/04/21" onblur="util_checkDate(this,'/');">
+                            <button type="button" id="btn_datepicker1" class="btn_datepicker" onclick="displayDp('searchReceiveYmd')" title="수신일자"><span class="blind">수신일자</span></button>
+                        </td>
+                    </tr>
+				     
+                    <tr>
+				        <th scope="col"><label for="criteriaYmd">기준일자</label></th>
+				        <td scope="col" colspan="3">
+				        	<div class="fl">
+				        	<input type="text" id="criteriaYmd" name="criteriaYmd" size="" class="i10" maxlength="10" value="2023/04/21" onblur="util_checkDate(this,'/');">
+							<button type="button" id="btn_datepicker" class="btn_datepicker" onclick="displayDp('criteriaYmd')" title="검색시작기간"><span class="blind">일자 검색</span></button>
+							<a class="btn_mdl" href="#click" onclick="fnMinusDate();"><span>-50일</span></a>
+							</div>
+							<a href="#click" onclick="fnSearch('');" class="btn_search" id="bt_search"><span>검색</span></a>
+						</td>
+				    </tr>
+				</tbody></table>
+			</div>
+			
+				<div class="infoleft">
+					<h3>[기술자현황]</h3>&nbsp;<span class="red"> ※ 각 항목을 클릭하시면 해당기술자별 현황이 나타납니다.</span>
+				</div>
+				
+				<div class="section">
+					<table>
+						<caption><span>기술자현황</span></caption>
+						<colgroup>
+						    <col class="w15p">
+						    <col class="w10p">
+						    <col class="w15p">
+						    <col class="w10p">
+						    <col class="w15p">
+						    <col class="w10p">
+						    <col class="w15p">
+						    <col class="w10p">
+					    </colgroup>
+						<tbody><tr>
+					        <th><a href="#click" onclick="fnSearch('10');" id="bt_search1"><span>일반기술자</span></a></th>
+					        <td>
+					        	0명
+					        </td>
+					    	<th><a href="#click" onclick="fnSearch('20');" id="bt_search2"><span>시공지원기술자</span></a></th>
+					    	<td>
+					    		0명
+					    	</td>
+					    	<th><a href="#click" onclick="fnSearch('30');" id="bt_search3"><span>기능기술자</span></a></th>
+					        <td>
+					        	0명
+					        </td>
+					    	<th><a href="#click" onclick="fnSearch('40');" id="bt_search4"><span>경력기술자</span></a></th>
+					    	<td>
+					    		0점
+					    	</td>
+					    </tr>
+					</tbody></table>
+				</div>
+				
+				<div class="infoleft">
+					
+						<h3>[일반기술자 현황]</h3>
+					
+					
+					
+					
+				</div>
+				<div class="fr">
+					[<span class="page">검색건수 :0건</span>]
+					<select name="recordCountPerPage" id="recordCountPerPage" title="목록개수"> <option value="10" selected="selected">10</option> <option value="20">20</option> <option value="30">30</option> <option value="50">50</option> <option value="100">100</option> </select>&nbsp; <a href="javascript:listRefresh();" class="btn_mdl" id="bt_recordCountPerPage"><span>목록고침</span></a>
+				</div>
+				
+					<div class="results">
+						<table summary="일반기술자 현황 목록 결과">
+							<caption><span>일반기술자 현황 목록 결과</span></caption>
+							
+							    
+							    
+		                            <colgroup>
+		                                <col class="w6p">
+		                                <col class="w18p">
+		                                <col class="w12p">
+		                                <col class="w12p">
+		                                <col class="w12p">
+		                                <col class="w12p">
+		                                <col class="w12p">
+		                                <col class="w10p">
+		                                <col class="w6p">
+		                            </colgroup>
+		                            <thead>
+                                        <tr>
+                                            <th scope="col"><label for="dutyField1">직무</label></th>
+                                            <td colspan="8" class="tl">
+                                                <div class="infoleft">
+                                                    <select onmousewheel="return false;" id="dutyField1" name="dutyField1" onchange="fnSearch('10');">
+	<option selected="selected" value="00">전체</option>
+	<option value="01">기계</option>
+	<option value="02">금속</option>
+	<option value="03">전기</option>
+	<option value="04">전자</option>
+	<option value="05">토목</option>
+	<option value="06">건축</option>
+	<option value="07">광업자원</option>
+	<option value="08">국토개발</option>
+	<option value="09">안전관리</option>
+	<option value="10">환경</option>
+	<option value="11">산업응용</option>
+	<option value="12">교통</option>
+	<option value="13">화공및세라믹</option>
+	<option value="14">섬유</option>
+	<option value="17">건설지원</option>
+	<option value="21">조경</option>
+	<option value="99">없음</option>
+</select>
+
+                                                </div>
+                                                <div class="inforight">
+                                                    <a class="btn_search" href="#click" onclick="fnSearchTechGradeStatus();"><span>직무별 기술자등급 현황</span></a>
+                                                </div>
+                                            </td>
+                                        </tr>		                                
+		                                <tr>
+		                                    <th scope="col">No.</th>
+		                                    <th scope="col">생년월일</th>
+		                                    <th scope="col">성명</th>        
+		                                    <th scope="col">기술자구분</th>
+		                                    <th scope="col">입사일자</th>
+		                                    <th scope="col">협회기준일자</th>
+		                                    <th scope="col">퇴사일자</th>
+		                                    <th scope="col">재직상태</th>
+		                                    <th scope="col">직무</th>
+		                                </tr>
+		                            </thead>
+		                            <tbody>
+		                                
+		                                
+		                                    <tr>
+		                                        <td colspan="9">검색된 데이터가 없습니다.</td>
+		                                    </tr>
+		                                
+		                            </tbody>
+							    
+							
+						</table>
+					</div>
+				
+				
+			
+			
+		</form>
+		<!-- paging start-->
+		
+    </div>
+    <div class="detail">
+		
+			<span class="red">
+				&nbsp;&nbsp;&nbsp;&nbsp;※ 비고 : <img src="/gov/koneps/ls/image/icon_yes.gif" border="0" alt="두개 이상의 직무"> 인 경우 두개 이상의 직무를 보유하고 있는 기술자 입니다.
+				<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<img src="/gov/koneps/ls/image/div_one.gif" border="0" alt="하나의 직무"> 인 경우 한개의 직무를 보유하고 있는 기술자 입니다.
+			</span>
+		
+		
+	</div>
+</div>
+<iframe name="xml" width="0" height="0" frameborder="0" title="xmlIframe"></iframe>
+
+ 
+
+
+</body>################# https://www.g2b.go.kr:8079/ls/techn/selectTechnRegDtl.do #################<head>
+<meta http-equiv="Content-Type" content="text/html; charset=euc-kr">
+<title>기술인력입력 상세</title>
+
+
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/body.css">
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/width.css">
+<!--[if IE]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie.css" />
+<![endif]-->
+<!--[if IE 8]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie8.css" />
+<![endif]-->
+<!--[if IE 7]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie7.css" />
+<![endif]-->
+<!--[if IE 6]>
+<link rel="stylesheet" type="text/css" href="/gov/koneps/co/css/ie6.css" />
+<script src="/gov/koneps/co/js/png_ie6.js" type="text/livescript"></script>
+<script language="javascript" type="text/javascript">
+//<![CDATA[
+DD_belatedPNG.fix('.png, .win, .btn_mdl, .btn_view, span, strong, img, li');  // png 이미지 적용
+//]]>
+</script>
+<![endif]-->
+
+<script type="text/javascript" src="/gov/koneps/co/js/crossDomain.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/popup.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/wz_tooltip.js"></script> </head><body><div id="WzTtDiV" style="visibility: hidden; position: absolute; overflow: hidden; padding: 0px; width: 0px; left: 0px; top: 0px;"></div>  
+<script type="text/javascript" src="/gov/koneps/co/js/validator.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/util.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/ajax.js"></script> 	
+<script type="text/javascript" src="/gov/koneps/co/js/commonPopup.js"></script>
+<script type="text/javascript" src="/gov/koneps/co/js/datepicker.js"></script>
+<script type="text/javascript" src="/gov/koneps/ls/js/lsReport.js"></script>
+
+<script type="text/javaScript" language="javascript">
+//<![CDATA[
+	function fnDetail(){//기술인력입력상세
+		$("#frm").attr("target","_self").attr("action","/ls/techn/selectTechnRegDtl.do").submit();
+	}
+    
+	function js_print(){        
+        if(js_clipReport4YN() == "Y"){
+            js_print4();
+        }else{
+            fnPrint();
+        }
+    }  
+    
+	function fnPrint(){//출력
+		var param ="";
+		if($("#searchPqIndustryCd").val() == "00"){
+			alert("공종을 선택하여 주세요.");
+			$("#searchPqIndustryCd").focus();
+			return;
+		}
+		
+		param ="assoCd="+$("#assoCd").val()+"&assoNm="+$("#assoNm").val()+"&bizRegNo="+$("#bizRegNo").val()
+			  +"&criteriaYmd="+$("#criteriaYmd").val()+"&receiveYmd="+$("#receiveYmd").val()
+			  +"&pvtNo="+$("#pvtNo").val()+"&searchPqIndustryCd="+$("#searchPqIndustryCd").val()
+			  +"&pqIndustryNm="+$("#searchPqIndustryCd option:selected").text();
+		
+	  	$("#fileName").val("technRegDtl");
+	  	$("#titleName").val("건설기술자 경력사항확인서");
+	  	
+	  	$("#url").val("/ls/techn/technRegDtlPrint.do?"+param);
+		
+	  	popup_openWindowScroll('', '1024', '768', 'technRegDtlPrint');
+	  	$("#frm").attr("target","technRegDtlPrint").attr("action","/ls/co/rexViewer.do").submit();
+	}
+	
+	function js_print4(){// CLIPREPORT출력
+		var param ="";
+		if($("#searchPqIndustryCd").val() == "00"){
+			alert("공종을 선택하여 주세요.");
+			$("#searchPqIndustryCd").focus();
+			return;
+		}
+		
+		param ="assoCd="+$("#assoCd").val()+"&assoNm="+$("#assoNm").val()+"&bizRegNo="+$("#bizRegNo").val()
+			  +"&criteriaYmd="+$("#criteriaYmd").val()+"&receiveYmd="+$("#receiveYmd").val()
+			  +"&pvtNo="+$("#pvtNo").val()+"&searchPqIndustryCd="+$("#searchPqIndustryCd").val()
+			  +"&pqIndustryNm="+$("#searchPqIndustryCd option:selected").text();
+		
+	  	$("#fileName").val("technRegDtl");
+	  	$("#titleName").val("건설기술자 경력사항확인서");
+	  	
+	  	$("#url").val("/ls/techn/technRegDtlPrint.do?"+param);
+		
+	  	popup_openWindowScroll('', '1024', '768', 'technRegDtlClipPrint');
+	  	$("#frm").attr("target","technRegDtlClipPrint").attr("action","/ls/co/constRepPrintType.do").submit();
+	}
+//]]>
+</script>
+
+
+<div id="content_wrap">
+    <div id="content_header">
+    	
+		<h2>기술인력입력 상세</h2>
+		
+		
+	</div>
+    <div id="container">
+        <!-- Content Include -->
+    	<form id="frm" name="frm" method="post" action="/ls/techn/selectTechnAssoDataErrorList.do">
+    		<input type="hidden" id="fileName" name="fileName">
+			<input type="hidden" id="titleName" name="titleName">
+			<input type="hidden" id="url" name="url">
+			<input type="hidden" id="taskCl" name="taskCl" value="">
+    		<input type="hidden" id="assoCd" name="assoCd" value="">
+    		<input type="hidden" id="assoNm" name="assoNm" value="">
+			<input type="hidden" id="receiveYmd" name="receiveYmd" value="">
+			<input type="hidden" id="pvtNo" name="pvtNo" value="">
+			<input type="hidden" id="bizRegNo" name="bizRegNo" value="">
+			<input type="hidden" id="criteriaYmd" name="criteriaYmd" value="">
+    		<div class="infoleft">
+				<h3>[일반정보]</h3>
+			</div>
+			<div class="detail">
+				<table>
+					<caption><span>기술인 일반정보</span></caption>
+					<colgroup>
+					    <col class="w15p">
+					    <col class="w35p">
+					    <col class="w15p">
+					    <col class="w35p">
+				    </colgroup>
+					<tbody><tr>
+				        <th scope="col">성명</th>
+				        <td scope="col"></td>
+				    	<th scope="col">주민등록번호</th>
+				    	<td scope="col">
+				    		
+				    	</td>
+				    </tr>
+				    <tr>
+				        <th>기술자구분</th>
+				        <td colspan="3"></td>
+				    </tr>
+				    <tr>
+				        <th>업무정지시작일자</th>
+				        <td></td>
+				    	<th>업무정지종료일자</th>
+				        <td></td>
+				    </tr>
+				</tbody></table>
+			</div>
+			<div class="infoleft">
+				<h3>[근무처정보]</h3>
+			</div>
+			<div class="detail">
+				<table summary="기술인 근무처정보 ">
+					<caption><span>기술인 근무처정보</span></caption>
+					<colgroup>
+					    <col class="w15p">
+					    <col class="w35p">
+					    <col class="w15p">
+					    <col class="w35p">
+				    </colgroup>
+				    <tbody><tr>
+				    	<th scope="col">소속</th>
+				        <td scope="col"></td>
+				        <th scope="col">직위</th>
+				        <td scope="col"></td>
+				    </tr>
+				    <tr>
+				    	<th scope="col">변동사유</th>
+				        <td scope="col"></td>
+				        <th scope="col">입사일자</th>
+				        <td scope="col"></td>
+				    </tr>
+				    <tr>
+				    	<th scope="col">협회기준일자</th>
+				        <td scope="col"></td>
+				        <th scope="col">퇴사일자</th>
+				        <td scope="col"></td>
+				    </tr>
+				</tbody></table>
+			</div>
+			<div class="infoleft">
+				<h3>[학력정보]</h3>
+			</div>
+			<div class="results">
+				<table id="schTable" summary="기술인 학력정보 ">
+					<caption><span>기술인 학력정보</span></caption>
+					<colgroup>
+					    <col class="w10p">
+					    <col class="w25p">
+					    <col class="w25p">
+					    <col class="w20p">
+					    <col class="w20p">
+				    </colgroup>
+					<tbody><tr>
+	                    <th scope="col">No.</th>
+	                    <th scope="col">출신학교</th>        
+	                    <th scope="col">출신학과</th>
+	                    <th scope="col">재학상태</th>
+	                    <th scope="col">변동사유</th>
+	                </tr>
+					
+					
+						<tr>
+							<td colspan="5">검색된 데이터가 없습니다.</td>
+						</tr>
+					
+				</tbody></table>
+			</div>
+			<div class="infoleft">
+				<h3>[직무정보]</h3>
+			</div>
+			<div class="results">
+				<table id="dutyTable" summary="기술인 직무정보 ">
+					<caption><span>기술인 직무정보</span></caption>
+					<colgroup>
+					    <col class="w10p">
+					    <col class="w25p">
+					    <col class="w25p">
+					    <col class="w20p">
+					    <col class="w20p">
+				    </colgroup>
+					<tbody><tr>
+	                    <th scope="col">No.</th>
+	                    <th scope="col">직무분야</th>        
+	                    <th scope="col">기술등급</th>
+	                    <th scope="col">종사일수</th>
+	                    <th scope="col">변동사유</th>
+	                </tr>
+				    
+					
+						<tr>
+							<td colspan="5">검색된 데이터가 없습니다.</td>
+						</tr>
+					
+				</tbody></table>
+			</div>
+			<div class="infoleft">
+				<h3>[자격정보]</h3>
+			</div>
+			<div class="results">
+				<table id="qualTable" summary="기술인 자격정보 ">
+					<caption><span>기술인 자격정보</span></caption>
+					<colgroup>
+					    <col class="w10p">
+					    <col class="w20p">
+					    <col class="w20p">
+					    <col class="w15p">
+					    <col class="w15p">
+					    <col class="w20p">
+				    </colgroup>
+					<tbody><tr>
+	                    <th scope="col">No.</th>
+	                    <th scope="col">자격증명칭</th>        
+	                    <th scope="col">자격번호</th>
+	                    <th scope="col">정지시작일자</th>
+	                    <th scope="col">정지종료일자</th>
+	                    <th scope="col">변동사유</th>
+	                </tr>
+					
+					
+						<tr>
+							<td colspan="6">검색된 데이터가 없습니다.</td>
+						</tr>
+					
+				</tbody></table>
+			</div>
+			<div class="infoleft">
+				<h3>[공사참여 실적정보]</h3>
+			</div>
+			<div class="results">
+				<table id="perfTable" summary="기술인 공사참여 실적정보 ">
+					<caption><span>기술인 공사참여 실적정보</span></caption>
+					<colgroup>
+					    <col class="w6p">
+					    <col class="w10p">
+					    <col class="">
+					    <col class="w12p">
+					    <col class="w12p">
+					    <col class="w8p">
+					    <col class="w8p">
+                        <col class="w8p">
+                        <col class="w8p">
+                        <col class="w8p">
+                        <col class="w8p">
+				    </colgroup>
+				    <tbody><tr>
+				        <th><label for="searchPqIndustryCd">공종</label></th>
+				        <td colspan="10" class="tl">
+				        	<select onmousewheel="return false;" id="searchPqIndustryCd" name="searchPqIndustryCd" onchange="fnDetail();">
+	<option value="00">전체</option>
+	<option value="01">교량</option>
+	<option value="02">공항</option>
+	<option value="03">공항청사</option>
+	<option value="04">댐</option>
+	<option value="05">에너지</option>
+	<option value="06">간척</option>
+	<option value="07">항만</option>
+	<option value="08">철도</option>
+	<option value="09">지하철</option>
+	<option value="10">터널</option>
+	<option value="11">발전소</option>
+	<option value="12">소각로</option>
+	<option value="13">폐수처리</option>
+	<option value="14">하수처리</option>
+	<option value="15">준설</option>
+	<option value="16">상수도</option>
+	<option value="17">정수장</option>
+	<option value="18">하수도</option>
+	<option value="19">공연</option>
+	<option value="20">관람</option>
+	<option value="21">공용청사(업무)</option>
+	<option value="22">공동주택</option>
+	<option value="23">송전</option>
+	<option value="24">변전</option>
+	<option value="25">도로</option>
+	<option value="26">전시</option>
+	<option value="71">택지조성</option>
+	<option value="72">부지조성</option>
+	<option value="73">매립(쓰레기)</option>
+	<option value="74">교육연구시설</option>
+</select>
+
+				        </td>
+				    </tr>
+	                <tr>
+	                    <th scope="col" rowspan="2">No.</th>
+	                    <th scope="col" rowspan="2">공종</th>
+	                    <th scope="col" rowspan="2">발주기관/공사명</th>       
+	                    <th scope="col">공사금액</th>
+	                    <th scope="col">참여기간</th>
+	                    <th scope="col">참여일수</th>
+	                    <th scope="col">담당업무</th>
+                        <th scope="col">변동사유</th>
+                        <th scope="col">승인상태</th>
+                        <th scope="col">업종<br>코드명</th>
+                        <th scope="col">업종그룹<br>코드명</th>
+	                </tr>
+	                <tr>
+                        <th colspan="6">규모</th>
+                        <th>담당업무<br>(중분류)</th>
+                        <th>책임정도</th>
+	                </tr>
+					
+					
+						<tr>
+							<td colspan="11">검색된 데이터가 없습니다.</td>
+						</tr>
+					
+				</tbody></table>
+			</div>
+			<div class="button_wrap">
+				<div class="button3">
+					
+						<a class="btn_mdl" href="#click" onclick="js_print();"><span>출력</span></a>
+						<a class="btn_mdl" href="/ls/perf/selectTechnInfoListC.do?"><span>이전</span></a>
+					
+					
+		  		</div>
+			</div>
+		</form>
+    </div>
+</div>
+
+
+ 
+
+
+</body>

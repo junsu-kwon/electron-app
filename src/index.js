@@ -1,10 +1,24 @@
 const { app, BrowserWindow, BrowserView, ipcMain, Menu } = require('electron');
 const path = require('path');
+const fs = require('fs');
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
+
+const URL_OBJECT = {
+  login: 'https://www.g2b.go.kr:8070/um/login/login.do?eventType=1%22', // 로그인
+  manage_condition: 'https://www.g2b.go.kr:8079/ls/perf/selectStateMngStatC.do', // 경영상태(실적, 여유율포함)
+  my_company:
+    'https://www.g2b.go.kr:8070/um/supplier/general/supplierSelfInfoMng.do', // 자기정보확인관리/등록증출력
+  sinindo: 'https://www.g2b.go.kr:8079/ls/perf/selectCreditDtlC.do', // 신인도
+  technical_list: 'https://www.g2b.go.kr:8079/ls/perf/selectTechnInfoListC.do', // 기술인력정보목록
+  technical_detail: 'https://www.g2b.go.kr:8079/ls/techn/selectTechnRegDtl.do', // 기술인력정보 상세
+};
+
+let mainWindow = null;
+let contentView = null;
 
 const createWindow = () => {
   // 상단 메뉴바 설정
@@ -13,10 +27,11 @@ const createWindow = () => {
   Menu.setApplicationMenu(menu);
 
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
+      defaultEncoding: 'UTF-8',
       preload: path.join(__dirname, 'preload.js'),
 
       // 다 기본값
@@ -30,15 +45,14 @@ const createWindow = () => {
   mainWindow.loadFile(path.join(__dirname, 'index.html'));
 
   // 브라우저뷰 생성
-  const contentView = new BrowserView({
+  contentView = new BrowserView({
     webPreferences: {
+      defaultEncoding: 'UTF-8',
       preload: path.join(__dirname, 'preload.js'),
     },
   });
   contentView.setBounds({ x: 0, y: 80, width: 800, height: 500 });
-  contentView.webContents.loadURL(
-    'https://www.g2b.go.kr:8070/um/login/login.do?eventType=1%22',
-  );
+  contentView.webContents.loadURL(URL_OBJECT.login);
 
   mainWindow.setBrowserView(contentView);
 
@@ -52,7 +66,7 @@ const createWindow = () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
-  // contentView.webContents.openDevTools();
+  contentView.webContents.openDevTools();
 
   contentView.webContents.on('did-finish-load', () => {
     contentView.webContents.executeJavaScript(`
@@ -66,23 +80,6 @@ const createWindow = () => {
     `);
   });
 
-  // js 코드 실행
-  // contentView.webContents
-  //   .executeJavaScript(`document.querySelector('html').innerHTML;`)
-  //   .then((html) => {
-  //     console.log(html);
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error executing script:', error);
-  //   });
-
-  // contentView.webContents.executeJavaScript(`transmit_selfClick('C');`);
-  // .then((html) => {
-  //   console.log(html);
-  // })
-  // .catch((error) => {
-  //   console.error('Error executing script:', error);
-  // });
 };
 
 // This method will be called when Electron has finished
@@ -117,3 +114,61 @@ ipcMain.on('click-detected', (event, clickData) => {
   );
   // 필요한 작업 수행
 });
+
+ipcMain.on('refresh', (event, clickData) => {
+  mainWindow.webContents.reload();
+  contentView.webContents.reload();
+});
+
+ipcMain.on('move-login', (event, clickData) => {
+  contentView.webContents.loadURL(URL_OBJECT.login);
+});
+
+ipcMain.on('soojip-start', async (event, clickData) => {
+  getHtml(URL_OBJECT.manage_condition);
+  await sleep(3000);
+  getHtml(URL_OBJECT.my_company);
+  await sleep(3000);
+  getHtml(URL_OBJECT.sinindo);
+  await sleep(3000);
+  getHtml(URL_OBJECT.technical_list);
+  await sleep(3000);
+  getHtml(URL_OBJECT.technical_detail);
+  await sleep(3000);
+});
+
+function getHtml(url) {
+  contentView.webContents.loadURL(url);
+
+  contentView.webContents
+    .executeJavaScript(`document.querySelector('html').innerHTML;`)
+    .then((html) => {
+      html = `################# ${url} #################` + html;
+      // 파일 저장 경로
+      const savePath = path.join(__dirname, 'data/data.txt');
+
+      // 파일 존재 여부 확인
+      fs.access(savePath, fs.constants.F_OK, (err) => {
+        if (err) {
+          // 파일이 없으면 새로 생성
+          fs.writeFile(savePath, html, (err) => {
+            if (err) throw err;
+            console.log('File saved!');
+          });
+        } else {
+          // 파일이 있으면 내용 추가
+          fs.appendFile(savePath, html, (err) => {
+            if (err) throw err;
+            console.log('Data appended!');
+          });
+        }
+      });
+    })
+    .catch((error) => {
+      console.error('Error executing script:', error);
+    });
+}
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
